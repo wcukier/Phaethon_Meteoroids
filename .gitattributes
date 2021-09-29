@@ -1,0 +1,6 @@
+*.png !text !filter !merge !diff
+*.unity !text !filter !merge !diff
+*.hdr !text !filter !merge !diff
+*.clip !text !filter !merge !diff
+ArtifactDB !text !filter !merge !diff
+. !text !filter !merge !diff
