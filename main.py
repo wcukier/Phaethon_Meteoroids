@@ -8,6 +8,8 @@ import scipy
 import spiceypy as spice
 import rebound
 import reboundx
+import os
+import sys
 
 GRAVITATIONAL_CONSTANT = 6.67430e-11 #m^3/kg/s^2
 MASS_SUN = 1.98847e30 #kg
@@ -24,10 +26,11 @@ year = spice.jyear() # Year [s]
 au = AU_TO_M # Astronomical Unit [m]
 
 from generate import particles
-import perihelion
+from perihelion import perihelion
 
 if (__name__ == "__main__"):
-    for k in range(0, 100):
+        k = int(sys.argv[1])
+        dr = os.getcwd()
         print(k)
         n_years = 2000
         window = 2
@@ -115,13 +118,13 @@ if (__name__ == "__main__"):
 
         xy = np.zeros((int(Noutputs), n, 5))
 
-        np.save(f"Output_novel/beta{k}.npy", beta)
-        np.save(f"Output_novel/mass{k}.npy", mass)
+        np.save(f"{dr}/output/novel/beta{k}.npy", beta)
+        np.save(f"{dr}/output/novel/mass{k}.npy", mass)
 
         for i in tqdm(range(int((n_years-window)))):
             sim.integrate(int(i*year))
                     
-        sim.save(f"Output_novel/sim{k}.bin")
+        sim.save(f"{dr}/output/novel/sim{k}.bin")
         for i, time in enumerate(tqdm(times)):
 
             sim.integrate(time)
@@ -129,4 +132,4 @@ if (__name__ == "__main__"):
                 o = p.calculate_orbit(primary = ps[0])
                 xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
     #                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
-        np.save(f"Output_novel/particles{k}.npy", xy)
+        np.save(f"{dr}/output/particles{k}.npy", xy)
