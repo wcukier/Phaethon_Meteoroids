@@ -17,7 +17,7 @@ m1 = 1e-2
 c = (1-s)/(m1**(1-s) - m0 ** (1-s) )
 
 def inv_mass_distr(x):
-    return ((1-s)/c*x + m0**(1-s))**(1-s)
+    return ((1-s)/c*x + m0**(1-s))**(1/(1-s))
 
 def gen_mass(n):
     x = np.random.rand(n)
