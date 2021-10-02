@@ -131,6 +131,6 @@ def perihelion():
     t_start = times[idxmin] + start_date
     perihelion = xy[idxmin]
 
-    return perihelion, t_start
+    return perihelion, t_start, xy
 
 

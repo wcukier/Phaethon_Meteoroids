@@ -30,14 +30,22 @@ from perihelion import perihelion
 
 if (__name__ == "__main__"):
         k = int(sys.argv[1])
+        model = int(sys.argv[2])
         dr = os.getcwd()
+        if   (model == 0): subdir = "novel"
+        elif (model == 1): subdir = "vel"
+        elif (model == 2): subdir = "distr"
+        else:
+             print("second argument must be 0,1, or 2")
+             raise
+     
         print(k)
         n_years = 2000
         window = 2
         pts_per_year = 10000
         n_particles = 100
 
-        y0, t_start = perihelion()
+        y0, t_start, orbit = perihelion()
 
 
 
@@ -95,7 +103,8 @@ if (__name__ == "__main__"):
 
         sim.move_to_hel()
         for i in range(n):
-            vel[i] = [0,0,0]
+            if (model == 2): y0 = orbit[10407*i+105*k]
+            if (model != 1): vel[i] = [0,0,0]
             sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2])
         sim.move_to_com()
 
@@ -132,4 +141,4 @@ if (__name__ == "__main__"):
                 o = p.calculate_orbit(primary = ps[0])
                 xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
     #                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
-        np.save(f"{dr}/output/particles{k}.npy", xy)
+        np.save(f"{dr}/output/novel/particles{k}.npy", xy)
