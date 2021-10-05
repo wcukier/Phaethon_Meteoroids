@@ -135,12 +135,12 @@ if (__name__ == "__main__"):
                         for p in sim.particles[n_active:]:
                             h = p.hash
                             if sim.particles[0] ** p < .01:
-                            sim.remove(hash=h)
-                            n_escaped +=1
-                            print(f"Number escaped: {n_escaped}")
+                                sim.remove(hash=h)
+                                n_escaped +=1
+                                print(f"Number escaped: {n_escaped}")
                 
-                    escaped = True   
-                    while(escaped == True):
+                escaped = True   
+                while(escaped == True):
                         try:
                             sim.integrate(int(i*year))
 
@@ -169,13 +169,13 @@ if (__name__ == "__main__"):
                             n_escaped += 1
                             print(f"Number escaped: {n_escaped}")
                         for j in range(sim.N):
-                                p = sim.particles[j]
-                                d2 = p.x*p.x + p.y*p.y + p.z*p.z
-                                if d2>sim.exit_max_distance**2:
-                                    index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
-                            print(index)
-                            try: sim.remove(hash=index)
-                            except: escaped = False
+                            p = sim.particles[j]
+                            d2 = p.x*p.x + p.y*p.y + p.z*p.z
+                            if d2>sim.exit_max_distance**2:
+                                index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
+                        print(index)
+                        try: sim.remove(hash=index)
+                        except: escaped = False
                             
 
                     for j in range(n):
