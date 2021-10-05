@@ -12,9 +12,12 @@ KPL/MK
    naif0008.tls                Generic LSK
    de431.bsp   (part 1 and 2)  Lunar/Planetary Ephemeris SCK
    3003200.bsp                 Phaethon 3200 SCK (via Horizons)
+   psp_predict                 PSP trajectory data 
+   spp_recon_*_*_v001.bsp      PSP trajectory data (more specific)
+   destiny.bsp                 DESTINY+ trajectory data
 
    \begindata
-   PATH_VALUES = ( '/Users/wolfcukier/Dropbox/Research/Phaethon Meteoroids/SPICE' )
+   PATH_VALUES = ( 'data/SPICE' )
    
    PATH_SYMBOLS = ( 'PTH')
    
