@@ -49,6 +49,7 @@ if (__name__ == "__main__"):
 
 
         for l in range(10):
+                n_escaped = 0
                 print(f"{k}:{l}")
                 beta, mass, vel = particles(n_particles, "asteroidal", max_b = 0.052)
 
