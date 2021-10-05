@@ -1,8 +1,8 @@
 KPL/MK
 
-   Kernels are available to download: 
-   https://www.dropbox.com/sh/o7ce5hsk8cath55/AAAl0DIRU1cg89Itk1HLvGZPa?dl=0
-   
+   This is the meta-kernel used in the solution of the
+   "Obtaining Target States and Positions" task in the
+   Remote Sensing Hands On Lesson.
 
    The names and contents of the kernels referenced by this
    meta-kernel are as follows:
@@ -17,11 +17,7 @@ KPL/MK
    destiny.bsp                 DESTINY+ trajectory data
 
    \begindata
-<<<<<<< HEAD
-   PATH_VALUES = ( '/scratch/network/wcukier/phaethon/Phaethon-Meteoroids/SPICE' )
-=======
    PATH_VALUES = ( 'data/SPICE' )
->>>>>>> 538ec132343b888a9b64970e696f4ab58b84a419
    
    PATH_SYMBOLS = ( 'PTH')
    

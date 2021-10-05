@@ -29,6 +29,7 @@ from generate import particles
 from perihelion import perihelion
 
 if (__name__ == "__main__"):
+        n_escaped = 0
         k = int(sys.argv[1])
         model = int(sys.argv[2])
         dr = os.getcwd()
@@ -127,18 +128,62 @@ if (__name__ == "__main__"):
 
         xy = np.zeros((int(Noutputs), n, 5))
 
-        np.save(f"{dr}/output/novel/beta{k}.npy", beta)
-        np.save(f"{dr}/output/novel/mass{k}.npy", mass)
+        np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
+        np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
 
         for i in tqdm(range(int((n_years-window)))):
-            sim.integrate(int(i*year))
+            for p in sim.particles[n_active:]:
+                h = p.hash
+                if sim.particles[0] ** p < .01:
+                    sim.remove(hash=h)
+                    n_escaped +=1
+                    print(f"Number escaped: {n_escaped}")
+            
+            escaped = True   
+            while(escaped == True):
+                try:
+                    sim.integrate(int(i*year))
+
+                    escaped = False
+                except:
+                    n_escaped += 1
+                    print(f"Number escaped: {n_escaped}")
+                    for j in range(sim.N):
+                        p = sim.particles[j]
+                        d2 = p.x*p.x + p.y*p.y + p.z*p.z
+                        if d2>sim.exit_max_distance**2:
+                            index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
+                    print(index)
+                    try: sim.remove(hash=index)
+                    except: escaped = False 
                     
-        sim.save(f"{dr}/output/novel/sim{k}.bin")
+        sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
         for i, time in enumerate(tqdm(times)):
 
-            sim.integrate(time)
-            for j, p in enumerate(sim.particles[n_active:]):
-                o = p.calculate_orbit(primary = ps[0])
-                xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
-    #                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
-        np.save(f"{dr}/output/novel/particles{k}.npy", xy)
+            escaped = True
+            while(escaped == True):
+                try:
+                    sim.integrate(time)  
+                    escaped = False
+                except:
+                    n_escaped += 1
+                    print(f"Number escaped: {n_escaped}")
+                    for j in range(sim.N):
+                        p = sim.particles[j]
+                        d2 = p.x*p.x + p.y*p.y + p.z*p.z
+                        if d2>sim.exit_max_distance**2:
+                            index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
+                    print(index)
+                    try: sim.remove(hash=index)
+                    except: escaped = False
+                    
+
+            for j in range(n):
+                try:
+                    p = sim.particles[f"{j}"]
+                    o = p.calculate_orbit(primary = ps[0])
+                    xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
+                except:
+                    xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+#                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
+        np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
