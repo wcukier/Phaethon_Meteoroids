@@ -129,7 +129,7 @@ if (__name__ == "__main__"):
         xy = np.zeros((int(Noutputs), n, 5))
 
         np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
-        np.save(f"{dr}/output/{subdir}}/mass{k}.npy", mass)
+        np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
 
         for i in tqdm(range(int((n_years-window)))):
             for p in sim.particles[n_active:]:
@@ -158,30 +158,32 @@ if (__name__ == "__main__"):
                     except: escaped = False 
                     
         sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
-            escaped = True
-                    while(escaped == True):
-                        try:
-                            sim.integrate(time)  
-                            escaped = False
-                        except:
-                            n_escaped += 1
-                            print(f"Number escaped: {n_escaped}")
-                            for j in range(sim.N):
-                                p = sim.particles[j]
-                                d2 = p.x*p.x + p.y*p.y + p.z*p.z
-                                if d2>sim.exit_max_distance**2:
-                                    index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
-                            print(index)
-                            try: sim.remove(hash=index)
-                            except: escaped = False
-                            
+        for i, time in enumerate(tqdm(times)):
 
-                    for j in range(n):
-                        try:
-                            p = sim.particles[f"{j}"]
-                            o = p.calculate_orbit(primary = ps[0])
-                            xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
-                        except:
-                            xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
-    #                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
+            escaped = True
+            while(escaped == True):
+                try:
+                    sim.integrate(time)  
+                    escaped = False
+                except:
+                    n_escaped += 1
+                    print(f"Number escaped: {n_escaped}")
+                    for j in range(sim.N):
+                        p = sim.particles[j]
+                        d2 = p.x*p.x + p.y*p.y + p.z*p.z
+                        if d2>sim.exit_max_distance**2:
+                            index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
+                    print(index)
+                    try: sim.remove(hash=index)
+                    except: escaped = False
+                    
+
+            for j in range(n):
+                try:
+                    p = sim.particles[f"{j}"]
+                    o = p.calculate_orbit(primary = ps[0])
+                    xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
+                except:
+                    xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+#                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
         np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
