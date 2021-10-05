@@ -14,7 +14,7 @@ KPL/MK
    3003200.bsp                 Phaethon 3200 SCK (via Horizons)
 
    \begindata
-   PATH_VALUES = ( '/Users/wolfcukier/Dropbox/Research/Phaethon Meteoroids/SPICE' )
+   PATH_VALUES = ( '/scratch/network/wcukier/phaethon/Phaethon-Meteoroids/SPICE' )
    
    PATH_SYMBOLS = ( 'PTH')
    
