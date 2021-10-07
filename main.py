@@ -44,7 +44,7 @@ if (__name__ == "__main__"):
         n_years = 2000
         window = 2
         pts_per_year = 10000
-        n_particles = 100
+        n_particles = int(sys.argv[3])
 
         y0, t_start, orbit = perihelion()
 
@@ -63,6 +63,7 @@ if (__name__ == "__main__"):
 
 
         sim.units = ('s', 'AU', 'Msun')
+        sim.exit_max_distace = 10.
         sim.add(m=1.)
 
         [yj, lt] = spice.spkezr("JUPITER BARYCENTER", t_start, "J2000", "NONE", "SUN")
@@ -106,7 +107,7 @@ if (__name__ == "__main__"):
         for i in range(n):
             if (model == 2): y0 = orbit[10407*i+105*k]
             if (model != 1): vel[i] = [0,0,0]
-            sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2])
+            sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
         sim.move_to_com()
 
         rebx = reboundx.Extras(sim)
@@ -147,13 +148,13 @@ if (__name__ == "__main__"):
                     escaped = False
                 except:
                     n_escaped += 1
-                    print(f"Number escaped: {n_escaped}")
+                    print(f"Number escaped: {n_escaped}", file=sys.stderr)
                     for j in range(sim.N):
                         p = sim.particles[j]
                         d2 = p.x*p.x + p.y*p.y + p.z*p.z
-                        if d2>sim.exit_max_distance**2:
+                        if (d2>sim.exit_max_distance**2):
                             index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
-                    print(index)
+                    print(index, file = sys.stderr)
                     try: sim.remove(hash=index)
                     except: escaped = False 
                     
@@ -179,11 +180,11 @@ if (__name__ == "__main__"):
                     
 
             for j in range(n):
-                try:
+#                try:
                     p = sim.particles[f"{j}"]
                     o = p.calculate_orbit(primary = ps[0])
                     xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
-                except:
-                    xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+#                except:
+ #                   xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
 #                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
         np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
