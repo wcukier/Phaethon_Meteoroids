@@ -46,11 +46,17 @@ if (__name__ == "__main__"):
         pts_per_year = 10000
         n_particles = int(sys.argv[3])
 
-        y0, t_start, orbit = perihelion()
+        try:
+                y0 = np.load("data/perihelion.npy")
+                t_start = np.mean(np.load("data/t_start.npy"))
+                orbit = np.load("data/orig_orbit.npy")
+        except:
+                y0, t_start, orbit = perihelion()
+        
 
-
-
-        beta, mass, vel = particles(n_particles, "asteroidal", max_b = 0.052)
+        if (model == 2): b_max = .94;
+        else: b_max = .052
+        beta, mass, vel = particles(n_particles, "asteroidal", max_b = b_max)
 
 
         n = n_particles
@@ -62,6 +68,7 @@ if (__name__ == "__main__"):
         sim.tstep = .001
 
 
+        spice.furnsh("SPICE/meta.tm")
         sim.units = ('s', 'AU', 'Msun')
         sim.exit_max_distace = 10.
         sim.add(m=1.)
@@ -180,11 +187,11 @@ if (__name__ == "__main__"):
                     
 
             for j in range(n):
-#                try:
+                try:
                     p = sim.particles[f"{j}"]
                     o = p.calculate_orbit(primary = ps[0])
                     xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
-#                except:
- #                   xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
-#                 outfile.write(f"{p.x}, {p.y}, {p.z}, {o.a}, {o.e} \n")
+                except:
+                    xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+                    
         np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)

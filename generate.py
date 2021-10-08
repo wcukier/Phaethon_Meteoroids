@@ -11,17 +11,15 @@ au = 1.495978707e11 # m/AU
 
 
 s = 1.68
-m0 = 1e-9
 m1 = 1e-2
-    
-c = (1-s)/(m1**(1-s) - m0 ** (1-s) )
 
-def inv_mass_distr(x):
+def inv_mass_distr(x, m0 = 1e-9):
+    c = (1-s)/(m1**(1-s) - m0 ** (1-s) )
     return ((1-s)/c*x + m0**(1-s))**(1/(1-s))
 
-def gen_mass(n):
+def gen_mass(n, m0 = 1e-9):
     x = np.random.rand(n)
-    return inv_mass_distr(x)
+    return inv_mass_distr(x, m0)
 
 
 # General form of beta-mass function
@@ -66,6 +64,9 @@ def asteroidal(m):
 
 
 def particles(n, kind, max_b=20):
+    if (max_b < .06): m0 = 1e-9;
+    else: m0 = 1e-16;
+    
     beta = np.array([])
     mass = np.array([])
     speed = np.array([])

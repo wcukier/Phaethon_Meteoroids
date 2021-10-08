@@ -17,11 +17,11 @@ KPL/MK
    destiny.bsp                 DESTINY+ trajectory data
 
    \begindata
-<<<<<<< HEAD
+
    PATH_VALUES = ( '/scratch/network/wcukier/phaethon/Phaethon-Meteoroids/SPICE' )
-=======
-   PATH_VALUES = ( 'data/SPICE' )
->>>>>>> 538ec132343b888a9b64970e696f4ab58b84a419
+
+
+
    
    PATH_SYMBOLS = ( 'PTH')
    
