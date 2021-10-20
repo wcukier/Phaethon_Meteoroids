@@ -36,6 +36,9 @@ if (__name__ == "__main__"):
         if   (model == 0): subdir = "novel"
         elif (model == 1): subdir = "vel"
         elif (model == 2): subdir = "distr"
+        elif (model == 3): subdir = "novel_comet"
+        elif (model == 4): subdir = "vel_comet"
+        elif (model == 5): subdir = "distr_comet"
         else:
              print("second argument must be 0,1, or 2")
              raise
@@ -54,13 +57,13 @@ if (__name__ == "__main__"):
                 y0, t_start, orbit = perihelion()
         
 
-        if (model == 2): b_max = .94;
+        if (model % 3 == 2): b_max = .94; #distr models
         else: b_max = .052
-        beta, mass, vel = particles(n_particles, "asteroidal", max_b = b_max)
-
+        if (int(model / 3) == 0): beta, mass, vel = particles(n_particles, "asteroidal", max_b = b_max) #vel models
+        else: beta, mass, vel = particles(n_particles, "y_comet", max_b = b_max)
 
         n = n_particles
-        b = np.concatenate(([0,0],beta))
+ #       b = np.concatenate(([0,0],beta))
 
 
 
@@ -112,8 +115,8 @@ if (__name__ == "__main__"):
 
         sim.move_to_hel()
         for i in range(n):
-            if (model == 2): y0 = orbit[10407*i+105*k]
-            if (model != 1): vel[i] = [0,0,0]
+            if ((model % 3) == 2): y0 = orbit[10407*i+105*k]
+            if ((model % 3) != 1): vel[i] = [0,0,0]
             sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
         sim.move_to_com()
 
