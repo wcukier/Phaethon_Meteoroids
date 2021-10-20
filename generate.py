@@ -63,6 +63,43 @@ def asteroidal(m):
     return np.array(b), m, v_r
 
 
+def young_comet(m):
+    comet = pd.read_csv('data/beta_young_cometary.txt', header=None) #[g], beta
+    rho = 3205.64 * 1e3 #g/m^3 (calc. from Wilck and Mann) 
+    mass = comet[0]
+    beta = comet[1]
+
+    params = scipy.optimize.curve_fit(fit, mass[55:], beta[55:])
+    f = interp1d(np.log(mass),beta, kind = "linear")
+
+    m = np.array([i for i in m if mass.min() < i < 4/3*np.pi*rho*(1e-2**2)])
+    s = (m / (4/3 * np.pi * rho)) ** (1/3)
+    b = []
+
+    for i in m:
+        if i <= mass.max(): b.append(f(np.log(i)))
+        else: b.append(fit(i, params[0][0], params[0][1]))
+
+    v_c = 1/.4
+    w=1
+    v_a = v_c * np.power(m, 0.1)
+    v_r = v_a.copy()
+
+    
+    for i in range(len(m)):
+        done = False
+        while done==False:
+            x = 4*np.random.rand()
+            if ((x**2*np.exp(-x**2+1))**w > np.random.rand()):
+
+                v_a[i] = v_a[i]*x
+                done = True
+    
+
+
+    return np.array(b), m, v_r
+
+
 def particles(n, kind, max_b=20):
     if (max_b < .06): m0 = 1e-9;
     else: m0 = 1e-16;
@@ -75,8 +112,9 @@ def particles(n, kind, max_b=20):
     while beta.shape[0] < n:
         m = gen_mass(n - beta.shape[0]) #grams
 
-        b, m, v = asteroidal(m)
-
+        if (kind=="asteroidal"): b, m, v = asteroidal(m)
+        if (kind=="y_comet"): b,v,m = young_comet(m)
+        
         m = m[b<= max_b]
         v = v[b<= max_b]
         b = b[b<= max_b]
