@@ -4,7 +4,7 @@ Download the neccesary SPICE files from the links in SPICE/meta.tm and add them 
 
 ## Execution
 to run call the command line argument:
-python main.py *run_number* *model_type* *n_particles*
+python main.py <*run_number*> <*model_type*> <*n_particles*>
 
 Where *run_number* is an integer between 0 and 99 inclusive 
 
