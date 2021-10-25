@@ -145,7 +145,8 @@ if (__name__ == "__main__"):
         for i in tqdm(range(int((n_years-window)))):
             for p in sim.particles[n_active:]:
                 h = p.hash
-                if sim.particles[0] ** p < .01:
+                o = p.calculate_orbit(primary = ps[0])
+                if sim.particles[0] ** p < .01 or o.a < .05:
                     sim.remove(hash=h)
                     n_escaped +=1
                     print(f"Number escaped: {n_escaped}")
