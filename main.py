@@ -1,3 +1,4 @@
+## Imports ##
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -11,6 +12,8 @@ import reboundx
 import os
 import sys
 
+
+## Constants ##
 GRAVITATIONAL_CONSTANT = 6.67430e-11 #m^3/kg/s^2
 MASS_SUN = 1.98847e30 #kg
 AU_TO_M = 1.495978707e11 # m/AU
@@ -25,10 +28,16 @@ MASS_HG = 3.3011e23 #kg
 year = spice.jyear() # Year [s]
 au = AU_TO_M # Astronomical Unit [m]
 
-from generate import particles
+
+## Local Imports ##
+from generateBeta import particles
 from perihelion import perihelion
 
+
+## Main -- python age.py $run_num $model_num $age ##
 if (__name__ == "__main__"):
+
+        # Initialize
         n_escaped = 0
         k = int(sys.argv[1])
         model = int(sys.argv[2])
@@ -39,34 +48,46 @@ if (__name__ == "__main__"):
         elif (model == 3): subdir = "novel_comet"
         elif (model == 4): subdir = "vel_comet"
         elif (model == 5): subdir = "distr_comet"
+        elif (model == 6): subdir = "novel_old"
         else:
-             print("second argument must be 0,1, or 2")
+             print("second argument must be an integer between 0 and 6")
              raise
      
         print(k)
-        n_years = 2000
+
         window = 2
         pts_per_year = 10000
         n_particles = int(sys.argv[3])
 
+        # Allow for age to not be an arg
         try:
-                y0 = np.load("data/perihelion.npy")
-                t_start = np.mean(np.load("data/t_start.npy"))
-                orbit = np.load("data/orig_orbit.npy")
+                age = int(sys.argv[4])
         except:
-                y0, t_start, orbit = perihelion()
-        
+                age = 2000
+
+        # Fetch initial lata
+        n_years = age
+        if (age==2000):
+                try:
+                        y0 = np.load("data/perihelion.npy")
+                        t_start = np.mean(np.load("data/t_start.npy"))
+                        orbit = np.load("data/orig_orbit.npy")
+                except:
+                        y0, t_start, orbit = perihelion()
+        else:
+                y0, t_start, orbit = perihelion(age=age)
 
         if (model % 3 == 2): b_max = .94; #distr models
         else: b_max = .052
-        if (int(model / 3) == 0): beta, mass, vel = particles(n_particles, "asteroidal", max_b = b_max) #vel models
-        else: beta, mass, vel = particles(n_particles, "y_comet", max_b = b_max)
+
+        beta, mass, vel = particles(10000, model, max_b = b_max) #non-cometary models
+        beta = beta[n_particles*k: n_particles*(k+1)]
+        mass = mass[n_particles*k: n_particles*(k+1)]
+        vel = vel[n_particles*k: n_particles*(k+1)]
 
         n = n_particles
- #       b = np.concatenate(([0,0],beta))
 
-
-
+       # Initialize simulation
         sim = rebound.Simulation()
         sim.tstep = .001
 
@@ -74,7 +95,7 @@ if (__name__ == "__main__"):
         spice.furnsh("SPICE/meta.tm")
         sim.units = ('s', 'AU', 'Msun')
         sim.exit_max_distace = 10.
-        sim.add(m=1.)
+        sim.add(m=1.) # Sun
 
         [yj, lt] = spice.spkezr("JUPITER BARYCENTER", t_start, "J2000", "NONE", "SUN")
         yj = spice.convrt(yj, "KM", "AU")
@@ -84,49 +105,40 @@ if (__name__ == "__main__"):
         e_pos = spice.convrt(e_pos, 'KM', 'AU')
         sim.add(m=MASS_E/MASS_SUN, x=e_pos[0], y=e_pos[1], z=e_pos[2], vx=e_pos[3], vy=e_pos[4], vz=e_pos[5])
 
-
         [mr_pos, lt] = spice.spkezr('4', t_start, 'J2000', 'NONE', 'SUN')
         mr_pos = spice.convrt(mr_pos, 'KM', 'AU')
         sim.add(m=MASS_MR/MASS_SUN, x=mr_pos[0], y=mr_pos[1], z=mr_pos[2], vx=mr_pos[3], vy=mr_pos[4], vz=mr_pos[5])
-
-
 
         [v_pos, lt] = spice.spkezr('VENUS', t_start, 'J2000', 'NONE', 'SUN')
         v_pos = spice.convrt(v_pos, 'KM', 'AU')
         sim.add(m=MASS_V/MASS_SUN, x=v_pos[0], y=v_pos[1], z=v_pos[2], vx=v_pos[3], vy=v_pos[4], vz=v_pos[5])
 
-
-
         [hg_pos, lt] = spice.spkezr('MERCURY', t_start, 'J2000', 'NONE', 'SUN')
         hg_pos = spice.convrt(hg_pos, 'KM', 'AU')
         sim.add(m=MASS_HG/MASS_SUN, x=hg_pos[0], y=hg_pos[1], z=hg_pos[2], vx=hg_pos[3], vy=hg_pos[4], vz=hg_pos[5])
 
-
+        # make the simulation ignore the mass of the dust
         n_active = len(sim.particles)
-
-
-
-
         sim.n_active = n_active
         sim.Nactive = n_active
         sim.collision = "none"
 
-
-
+        # Add particles
         sim.move_to_hel()
         for i in range(n):
-            if ((model % 3) == 2): y0 = orbit[10407*i+105*k]
-            if ((model % 3) != 1): vel[i] = [0,0,0]
+            if ((model % 3) == 2): y0 = orbit[5200 * (1+int(k/100))] # Distributed Model -- many starting positions
+            if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
             sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
         sim.move_to_com()
 
+        # Initialize radiation forces
         rebx = reboundx.Extras(sim)
         rf = rebx.load_force("radiation_forces")
         rebx.add_force(rf)
         rf.params["c"] = 0.002004
 
 
-
+        # Initialize timesteps
         Noutputs = window*pts_per_year
         year = spice.jyear()
         times = np.linspace(int((n_years-window)*year), int(n_years*year), int(Noutputs))
@@ -134,23 +146,33 @@ if (__name__ == "__main__"):
         sim.move_to_com()        
         ps = sim.particles      
 
+        # Add information about the particle beta
         for i in range(n):
             ps[i+n_active].params["beta"] = beta[i]
 
+        # Initialize output
         xy = np.zeros((int(Noutputs), n, 5))
 
+        # Save particle parameters
         np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
         np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
 
+        MIN_A = 0 # Yes, this should be 0 
+        # Simulate for age-2 years
         for i in tqdm(range(int((n_years-window)))):
+
+                # Remove close particles
             for p in sim.particles[n_active:]:
                 h = p.hash
                 o = p.calculate_orbit(primary = ps[0])
-                if sim.particles[0] ** p < .01 or o.a < .05:
-                    sim.remove(hash=h)
-                    n_escaped +=1
-                    print(f"Number escaped: {n_escaped}")
-            
+                if sim.particles[0] ** p < .01 or o.a < MIN_A:
+                    try:
+                        sim.remove(hash=h)
+                        n_escaped +=1
+                        print(f"Number escaped: {n_escaped}")
+                    except: pass
+                        
+                    #Remove far particles
             escaped = True   
             while(escaped == True):
                 try:
@@ -168,10 +190,14 @@ if (__name__ == "__main__"):
                     print(index, file = sys.stderr)
                     try: sim.remove(hash=index)
                     except: escaped = False 
-                    
+
+        # Save particle states            
         sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
+
+        #Take lots of samples in the last ~2 years of orbit
         for i, time in enumerate(tqdm(times)):
 
+                #Remove far particles
             escaped = True
             while(escaped == True):
                 try:
@@ -190,6 +216,7 @@ if (__name__ == "__main__"):
                     except: escaped = False
                     
 
+                    # Generate output
             for j in range(n):
                 try:
                     p = sim.particles[f"{j}"]
@@ -197,5 +224,6 @@ if (__name__ == "__main__"):
                     xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
                 except:
                     xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
-                    
+
+        # Save output
         np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
