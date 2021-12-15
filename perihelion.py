@@ -18,11 +18,13 @@ MASS_HG = 3.3011e23 #kg
 year = spice.jyear() # Year [s]
 au = AU_TO_M # Astronomical Unit [m]
 
-def perihelion():
+def perihelion(age = 2000):
     spice.furnsh( 'SPICE/meta.tm' )
     t_start = spice.str2et('1600-01-01')
-    beg = spice.str2et('18 A.D. Jan 1')
-    end = spice.str2et('20 A.D. Jan 1')
+    beg = spice.str2et('2018 A.D. Jan 1')
+    year = spice.jyear()
+    beg -= age*year
+    end = 2*year
 
     pts_per_year = 365*24*60
     n_particles = 1

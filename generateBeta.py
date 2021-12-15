@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import scipy
 from scipy.interpolate import interp1d
+import beta2mass
 
 au = 1.495978707e11 # m/AU
 
@@ -100,7 +101,25 @@ def young_comet(m):
     return np.array(b), m, v_r
 
 
-def particles(n, kind, max_b=20):
+def calc_speed(m):
+    v_c = 1/.4
+    w=1
+    v_a = v_c * np.power(m, 0.1)
+    v_r = v_a.copy()
+
+    
+    for i in range(len(m)):
+        done = False
+        while done==False:
+            x = 4*np.random.rand()
+            if ((x**2*np.exp(-x**2+1))**w > np.random.rand()):
+
+                v_a[i] = v_a[i]*x
+                done = True
+
+    return v_a
+
+def particles(n, model, max_b=20):
     if (max_b < .06): m0 = 1e-7;
     
     beta = np.array([])
@@ -109,21 +128,22 @@ def particles(n, kind, max_b=20):
     
     
     while beta.shape[0] < n:
-        m = gen_mass(n - beta.shape[0]) #grams
+        if (model % 3 == 0): b = np.linspace(0, max_b, n+1)[1:]
+        else: b = np.tile(np.linspace(0, max_b, int(n/100)+1)[1:], 100)
 
-        if (kind=="asteroidal"): b, m, v = asteroidal(m)
-        if (kind=="y_comet"): b,v,m = young_comet(m)
+        if (model / 3 != 1): m = beta2mass.asteroidal(b)
+        else: m = beta2mass.young_comet(b)
         
-        m = m[b<= max_b]
-        v = v[b<= max_b]
-        b = b[b<= max_b]
-
-
+        v = calc_speed(m)
+        
         beta = np.concatenate((beta, b))
         mass = np.concatenate((mass, m))
         speed = np.concatenate((speed, v))
         
-
+    beta = beta[:n]
+    mass = mass[:n]
+    speed = speed[:n]
+        
 
     theta = np.random.rand(n) * 2 * np.pi
     phi = np.random.rand(n) * np.pi
