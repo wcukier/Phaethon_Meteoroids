@@ -1,4 +1,7 @@
-# beta2mass.py
+# geminids/beta2mass.py
+# Author: Wolf Cukier
+# Converts beta values to mass in grams from asteroidal and 
+# young cometary models
 
 import pandas as pd
 import numpy as np
@@ -27,7 +30,7 @@ def fit(x,a,b):
     return a* x**-b
 
 def asteroidal(b):
-    asteroid = pd.read_csv('data/beta_asteroidal.txt', header=None) #[g], beta
+    asteroid = pd.read_csv('./data/beta_asteroidal.txt', header=None) #[g], beta
     rho = 3205.64 * 1e3 #g/m^3 (calc. from Wilck and Mann) 
     mass = asteroid[0]
     beta = asteroid[1]
@@ -41,11 +44,11 @@ def asteroidal(b):
         if i >= beta.min(): m.append(np.exp(f(i)))
         else: m.append(fit(i, params[0][0], params[0][1]))
 
-    return m
+    return np.array(m)
 
     
 def young_comet(b):
-    comet = pd.read_csv('data/beta_young_cometary.txt', header=None) #[g], beta
+    comet = pd.read_csv('./data/beta_young_cometary.txt', header=None) #[g], beta
     rho = 364.278 #g/m^3 (calc. from Wilck and Mann) 
     mass = comet[0]
     beta = comet[1]
@@ -59,5 +62,5 @@ def young_comet(b):
         if i >= beta.min(): m.append(np.exp(f(i)))
         else: m.append(fit(i, params[0][0], params[0][1]))
 
-    return m
+    return np.array(m)
 
