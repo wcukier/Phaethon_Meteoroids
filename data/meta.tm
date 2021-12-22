@@ -1,8 +1,7 @@
 KPL/MK
 
-   This is the meta-kernel used in the solution of the
-   "Obtaining Target States and Positions" task in the
-   Remote Sensing Hands On Lesson.
+   This is the meta-kernel used for the 2021 Geminids Model 
+   by Wolf Cukier
 
    The names and contents of the kernels referenced by this
    meta-kernel are as follows:
@@ -12,12 +11,13 @@ KPL/MK
    naif0008.tls                Generic LSK
    de431.bsp   (part 1 and 2)  Lunar/Planetary Ephemeris SCK
    3003200.bsp                 Phaethon 3200 SCK (via Horizons)
-   psp_predict                 PSP trajectory data 
-   spp_recon_*_*_v001.bsp      PSP trajectory data (more specific)
-   destiny.bsp                 DESTINY+ trajectory data
+   psp_pedict.bsp              PSP data
+   spp_recon*.bsp              More specific pop data
+   destiny.bsp                 DESTINY+ Trajectory
+
 
    \begindata
-   PATH_VALUES = ( 'data/SPICE' )
+   PATH_VALUES = ( 'geminids/data/SPICE' )
    
    PATH_SYMBOLS = ( 'PTH')
    
@@ -26,6 +26,7 @@ KPL/MK
                        '$PTH/de431_part-1.bsp',
                        '$PTH/2003200.bsp',
                        '$PTH/psp_predict.bsp',
+                       '$PTH/destiny.bsp',
                        '$PTH/spp_recon_20210226_20210325_v001.bsp',
                        '$PTH/spp_recon_20210101_20210226_v001.bsp',
                        '$PTH/spp_recon_20200802_20201016_v001.bsp',
