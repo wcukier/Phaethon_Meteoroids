@@ -1,0 +1,16 @@
+figures/*
+output/*/*
+*.bsp
+*.tls
+*.bp
+*.bc
+*.ti
+*.tf
+*.bds
+*.tpc
+*.tsc
+*.pyc
+*.eps
+*.DS_Store
+*-checkpoint.py
+*.ipynb*
