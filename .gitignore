@@ -11,7 +11,7 @@ output/*/*
 *.tsc
 *.pyc
 *.eps
-*.ipynb/*
+*.ipynb_*
 *.DS_Store
 *-checkpoint.py
 .DS_Store
