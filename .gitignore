@@ -13,6 +13,5 @@ output/*/*
 *.eps
 *.DS_Store
 *-checkpoint.py
-*.ipynb*
 .DS_Store
 output/.DS_Store
