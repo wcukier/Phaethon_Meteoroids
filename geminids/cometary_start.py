@@ -4,6 +4,7 @@ author: Wolf Cukier
 Determines the initial locations of particles to be released for the cometary
 model
 """
+import sys
 import numpy as np
 from scipy.interpolate import interp1d
 
@@ -54,6 +55,7 @@ def init_loc(k, orbit, n=100):
         t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n) -
                     idx(k-1, ascending, decending, r_bounds, peri, n))/2
 
+    print(t_weight, file=sys.stderr)
     return orbit[idxk], r[idxk], t_weight
 
 def max_beta(k, orbit, n=100):
