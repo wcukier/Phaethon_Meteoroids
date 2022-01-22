@@ -41,7 +41,7 @@ def init_loc(k, orbit, n=100):
     decending = interp1d(r, indices)
     ascending = interp1d(r, indices)
 
-    r_bounds = np.linspace(r[peri], np.min((r[ap_1], r[ap_1])), n/2)
+    r_bounds = np.linspace(r[peri], np.min((r[ap_1], r[ap_1])), int(n/2))
 
 
 
