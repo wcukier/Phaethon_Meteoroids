@@ -126,7 +126,7 @@ if (__name__ == "__main__"):
     sim.move_to_hel()
     for i in range(n):
         if ((model % 3) == 2): # Distributed Model -- many starting positions
-            y0, t, r = init_loc(int(k/10))
+            y0, t, r = init_loc(int(k/10), orbit)
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
