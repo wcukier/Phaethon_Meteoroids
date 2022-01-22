@@ -7,7 +7,7 @@ model
 import numpy as np
 from scipy.interpolate import interp1d
 
-from .constants import PHAETHON_SEMI_MAJOR
+from .constants import *
 
 
 def idx(k, ascending, decending, r_bounds, peri, n):
@@ -64,5 +64,5 @@ def max_beta(k, orbit, n=100):
     """
 
     y0, r, t = init_loc(k, orbit, n)
-    return r/(2 * PHAETHON_SEMI_MAJOR)
+    return r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR)
 
