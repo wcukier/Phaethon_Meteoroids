@@ -26,7 +26,7 @@ from geminids.constants import *
 ## Local Imports ##
 from geminids.generateBeta import particles as particles
 from geminids.perihelion import perihelion as perihelion
-from geminids.cometary_start import init_loc as init_loc
+from geminids.cometary_start import init_loc as init_loc, max_beta
 
 
 ## Main -- python age.py $run_num $model_num $age ##
@@ -73,10 +73,10 @@ if (__name__ == "__main__"):
     else:
             y0, t_start, orbit = perihelion(age=age)
 
-    if (model % 3 == 2): b_max = .94; #distr models
+    if (model % 3 == 2): b_max = max_beta(int(k/10), orbit, n=100); #distr models
     else: b_max = .052
 
-    beta, mass, vel = particles(10000, model, max_b = b_max) #non-cometary models
+    beta, mass, vel = particles(10000, model, max_b=b_max) #non-cometary models
     beta = beta[n_particles*k: n_particles*(k+1)]
     mass = mass[n_particles*k: n_particles*(k+1)]
     vel = vel[n_particles*k: n_particles*(k+1)]
@@ -126,7 +126,7 @@ if (__name__ == "__main__"):
     sim.move_to_hel()
     for i in range(n):
         if ((model % 3) == 2): # Distributed Model -- many starting positions
-            y0, t, r = init_loc(k)
+            y0, t, r = init_loc(int(k/10))
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
