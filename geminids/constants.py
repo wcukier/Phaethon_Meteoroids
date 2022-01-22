@@ -16,3 +16,4 @@ MASS_V = 4.8675e24 #kg
 MASS_HG = 3.3011e23 #kg
 year = 31557600  # Year [s]
 au = AU_TO_M # Astronomical Unit [m]
+PHAETHON_SEMI_MAJOR = 1.2714 * AU_TO_M
