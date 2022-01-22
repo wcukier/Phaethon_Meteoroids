@@ -56,8 +56,8 @@ def particles(n, model, max_b=20):
         if (model % 3 == 0): b = np.linspace(0, max_b, n+1)[1:]
         else: b = np.tile(np.linspace(0, max_b, int(n/100)+1)[1:], 100)
 
-        if (model / 3 != 1): m = beta2mass.asteroidal(b)
-        else: m = beta2mass.young_comet(b)
+        if (model / 3 != 1): m = beta2mass.asteroidal(b) # not the cometary comp
+        else: m = beta2mass.young_comet(b) # cometary comp
         
         v = calc_speed(m)
         
