@@ -43,16 +43,18 @@ def init_loc(k, orbit, n=100):
 
     r_bounds = np.linspace(r[peri], np.min((r[ap_1], r[ap_1])), int(n/2))
 
-
-
+    idxk = idx(k, ascending, decending, r_bounds, peri, n)
     if (k == 0):
-        t_weight = (idx(k+1) + idx(k))/2 - ap_1
+        t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n) +
+                    idxk)/2 - ap_1
     if (k == n-1):
-        t_weight = ap_2 - (idx(k-1)+idx(k))/2
+        t_weight = ap_2 - (idx(k-1, ascending, decending, r_bounds, peri, n) +
+                           idxk)/2
     else:
-        t_weight = (idx(k+1) - idx(k-1))/2
+        t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n) -
+                    idx(k-1, ascending, decending, r_bounds, peri, n))/2
 
-    return orbit[idx(k)], r[idx(k)], t_weight
+    return orbit[idxk], r[idxk], t_weight
 
 def max_beta(k, orbit, n=100):
     """
