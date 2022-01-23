@@ -21,7 +21,7 @@ def idx(k, ascending, decending, r_bounds, peri, n):
     if ((k == int(n/2)) and (n % 2 == 1)):
         return peri
     else:
-        return int(ascending(r_bounds[k]))
+        return int(ascending(r_bounds[k-int(n/2) + (n % 2)]))
 
 def init_loc(k, orbit, n=100):
     """
