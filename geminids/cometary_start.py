@@ -17,7 +17,7 @@ def idx(k, ascending, decending, r_bounds, peri, n):
     """
 
     if (k < int(n/2)):
-        return int(decending(r_bounds[k]))
+        return int(decending(np.flip(r_bounds)[k]))
     if ((k == int(n/2)) and (n % 2 == 1)):
         return peri
     else:
@@ -35,20 +35,18 @@ def init_loc(k, orbit, n=100):
 
     peri = np.argmin(r)
     ap_1 = np.argmax(r[:peri])
-    ap_2 = np.argmax(r[peri:])
+    ap_2 = np.argmax(r[peri:]) + peri
 
     indices = np.arange(len(r))
+    decending = interp1d(r[ap_1:peri+1], indices[ap_1:peri+1])
+    ascending = interp1d(r[peri:ap_2+1], indices[peri:ap_2+1])
 
-    decending = interp1d(r, indices)
-    ascending = interp1d(r, indices)
-
-    r_bounds = np.linspace(r[peri], np.min((r[ap_1], r[ap_1])), int(n/2))
+    r_bounds = np.linspace(r[peri], np.min((r[ap_1], r[ap_2])), int(n/2))
 
     idxk = idx(k, ascending, decending, r_bounds, peri, n)
     if (k == 0):
-        t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n) +
-                    idxk)/2 - ap_1
-    if (k == n-1):
+        t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n)+idxk)/2 - ap_1
+    elif (k == n-1):
         t_weight = ap_2 - (idx(k-1, ascending, decending, r_bounds, peri, n) +
                            idxk)/2
     else:
