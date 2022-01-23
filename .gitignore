@@ -16,3 +16,6 @@ output/*/*
 *-checkpoint.py
 .DS_Store
 output/.DS_Store
+*.zip
+.vscode/*
+Run_Model.ipynb
