@@ -64,5 +64,11 @@ def max_beta(k, orbit, n=100):
     """
 
     y0, r, t = init_loc(k, orbit, n)
-    return r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR)
+    return max_beta_r(r)
 
+def max_beta_r(r):
+    """
+    Returns the maximum beta that will survive for a particle released at r
+    along 3200 Phaethon's orbut
+    """
+    return np.max(r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.6)
