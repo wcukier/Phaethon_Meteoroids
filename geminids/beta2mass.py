@@ -39,10 +39,11 @@ def asteroidal(b):
     m = []
 
     params = scipy.optimize.curve_fit(fit, beta[55:], mass[55:])
-    f = interp1d(beta, np.log(mass), kind = "linear")
+    f = interp1d(beta[55:], np.log(mass[55:]), kind = "linear")
 
     for i in b:
-        if i >= beta.min(): m.append(np.exp(f(i)))
+        if i >= beta[55:].max(): m.append(np.nan)
+        elif i >= beta.min(): m.append(np.exp(f(i)))
         else: m.append(fit(i, params[0][0], params[0][1]))
 
     return np.array(m)
