@@ -71,4 +71,4 @@ def max_beta_r(r):
     Returns the maximum beta that will survive for a particle released at r
     along 3200 Phaethon's orbut
     """
-    return np.max(r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.6)
+    return np.max((r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.6))
