@@ -52,7 +52,7 @@ if (__name__ == "__main__"):
     t_and_r = {}
 
     window = 2
-    pts_per_year = 10000
+    pts_per_year = 1000
     n_particles = int(sys.argv[3])
 
     # Allow for age to not be an arg
@@ -73,10 +73,14 @@ if (__name__ == "__main__"):
     else:
             y0, t_start, orbit = perihelion(age=age)
 
-    if (model % 3 == 2): b_max = max_beta(int(k/10), orbit, n=100); #distr models
+    n_part = 10000
+    if (model % 3 == 2):
+        b_max = max_beta(int(k/1000), orbit, n=1000); #distr models
+        n_part = 1000000
     else: b_max = .052
 
-    beta, mass, vel = particles(10000, model, max_b=b_max) #non-cometary models
+
+    beta, mass, vel = particles(n_part, model, max_b=b_max) #non-cometary models
     beta = beta[n_particles*k: n_particles*(k+1)]
     mass = mass[n_particles*k: n_particles*(k+1)]
     vel = vel[n_particles*k: n_particles*(k+1)]
