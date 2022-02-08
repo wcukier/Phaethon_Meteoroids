@@ -21,7 +21,7 @@ def weight_novel(b):
     arr[asteroidal(b) > 10] = 0
     arr[asteroidal(b) < 1e-9] = 0
 
-    return arr / asteroidal(b)
+    return arr
 
 
 def weight_vel(b):
@@ -29,7 +29,7 @@ def weight_vel(b):
     arr[asteroidal(b) > 10] = 0
     arr[asteroidal(b) < 1e-9] = 0
 
-    return arr/100 /asteroidal(b)
+    return arr/100
 
 def weight_cometary(b, r, t):
 
@@ -48,4 +48,4 @@ def weight_novelc(b):
     arr[young_comet(b) > 10] = 0
     arr[young_comet(b) < 1e-9] = 0
 
-    return arr / young_comet(b)
+    return arr
