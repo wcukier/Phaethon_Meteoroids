@@ -197,14 +197,14 @@ if (__name__ == "__main__"):
                 print(index, file = sys.stderr)
                 try: sim.remove(hash=index)
                 except: escaped = False
-
-        try:
-            p = sim.particles[f"{j}"]
-            o = p.calculate_orbit(primary = ps[0])
-            oribtal_elements[i][j] = [o.a, o.e, o.i, o.omega]
-        except Exception as e:
-            print(f"Error in orbital elements: {e}", file=sys.stderr, flush=True)
-            oribtal_elements[i][j] = [np.nan, np.nan, np.nan, np.nan]
+        for j in range(n):
+            try:
+                p = sim.particles[f"{j}"]
+                o = p.calculate_orbit(primary = ps[0])
+                oribtal_elements[i][j] = [o.a, o.e, o.i, o.omega]
+            except Exception as e:
+                print(f"Error in orbital elements: {e}", file=sys.stderr, flush=True)
+                oribtal_elements[i][j] = [np.nan, np.nan, np.nan, np.nan]
 
 
     # Save particle states
