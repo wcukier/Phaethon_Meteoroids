@@ -157,6 +157,8 @@ if (__name__ == "__main__"):
 
     # Initialize output
     xy = np.zeros((int(Noutputs), n, 5))
+    oribtal_elements = np.zeros((n_years-window, n, 4))
+
 
     # Save particle parameters
     np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
@@ -195,6 +197,15 @@ if (__name__ == "__main__"):
                 print(index, file = sys.stderr)
                 try: sim.remove(hash=index)
                 except: escaped = False
+
+        try:
+            p = sim.particles[f"{j}"]
+            o = p.calculate_orbit(primary = ps[0])
+            xy[i][j] = [o.a, o.e, o.i, o.omega]
+        except Exception as e:
+            print(f"Error in orbital elements: {e}", file=sys.stderr, flush=True)
+            xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+
 
     # Save particle states
     sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
