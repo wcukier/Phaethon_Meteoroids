@@ -201,13 +201,14 @@ if (__name__ == "__main__"):
         try:
             p = sim.particles[f"{j}"]
             o = p.calculate_orbit(primary = ps[0])
-            xy[i][j] = [o.a, o.e, o.i, o.omega]
+            oribtal_elements[i][j] = [o.a, o.e, o.i, o.omega]
         except Exception as e:
             print(f"Error in orbital elements: {e}", file=sys.stderr, flush=True)
-            xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
+            oribtal_elements[i][j] = [np.nan, np.nan, np.nan, np.nan]
 
 
     # Save particle states
+    np.save(f"{dr}/output/{subdir}/elements{k}.npy", oribtal_elements)
     sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
 
     #Take lots of samples in the last ~2 years of orbit
