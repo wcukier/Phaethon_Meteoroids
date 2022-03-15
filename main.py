@@ -75,8 +75,8 @@ if (__name__ == "__main__"):
 
     n_part = 10000
     if (model % 3 == 2):
-        b_max = max_beta(int(k/1000), orbit, n=1000); #distr models
-        n_part = 1000000
+        b_max = max_beta(int(k/100), orbit, n=1000); #distr models
+        n_part = 100000
     else: b_max = .052
 
 
@@ -130,7 +130,7 @@ if (__name__ == "__main__"):
     sim.move_to_hel()
     for i in range(n):
         if ((model % 3) == 2): # Distributed Model -- many starting positions
-            y0, r, t = init_loc(int(k/10), orbit)
+            y0, r, t = init_loc(int(k/100), orbit)
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
@@ -162,7 +162,7 @@ if (__name__ == "__main__"):
     np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
     np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
 
-    MIN_A = 0 # Yes, this should be 0
+    MIN_A = 0.2 # Yes, this should be 0.2
     # Simulate for age-2 years
     for i in tqdm(range(int((n_years-window)))):
 
