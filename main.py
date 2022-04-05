@@ -157,7 +157,7 @@ if (__name__ == "__main__"):
 
     # Initialize output
     xy = np.zeros((int(Noutputs), n, 5))
-    oribtal_elements = np.zeros((n_years-window, n, 4))
+    oribtal_elements = np.zeros((n_years-window, n, 5))
 
 
     # Save particle parameters
@@ -201,10 +201,10 @@ if (__name__ == "__main__"):
             try:
                 p = sim.particles[f"{j}"]
                 o = p.calculate_orbit(primary = ps[0])
-                oribtal_elements[i][j] = [o.a, o.e, o.inc, o.omega]
+                oribtal_elements[i][j] = [o.a, o.e, o.inc, o.omega, o.Omega]
             except Exception as e:
                 print(f"Error in orbital elements: {e}", file=sys.stderr, flush=True)
-                oribtal_elements[i][j] = [np.nan, np.nan, np.nan, np.nan]
+                oribtal_elements[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
 
 
     # Save particle states
