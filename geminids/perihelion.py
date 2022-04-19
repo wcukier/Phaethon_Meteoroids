@@ -24,7 +24,7 @@ def perihelion(age = 2000):
     n_years = 2
 
 
-    [y0, lt] = spice.spkezr('2003200', t_start, 'J2000', 'NONE', 'SUN')
+    [y0, lt] = spice.spkezr('2003200', t_start, 'ECLIPJ2000', 'NONE', 'SUN')
     y0 = spice.convrt(y0, "KM", "AU")
 
 
@@ -40,20 +40,20 @@ def perihelion(age = 2000):
     sim.add(m=1.)
 
     [yj, lt] = spice.spkezr("JUPITER BARYCENTER", t_start, 
-                            "J2000", "NONE", "SUN")
+                            "ECLIPJ2000", "NONE", "SUN")
     yj = spice.convrt(yj, "KM", "AU")
     sim.add(m=0.000954588, x=yj[0], y=yj[1], z=yj[2], 
             vx=yj[3], vy=yj[4], vz=yj[5])
     print("Added Jupiter...")
 
-    [e_pos, lt] = spice.spkezr('EARTH', t_start, 'J2000', 'NONE', 'SUN')
+    [e_pos, lt] = spice.spkezr('EARTH', t_start, 'ECLIPJ2000', 'NONE', 'SUN')
     e_pos = spice.convrt(e_pos, 'KM', 'AU')
     sim.add(m=MASS_E/MASS_SUN, x=e_pos[0], y=e_pos[1], z=e_pos[2],
             vx=e_pos[3], vy=e_pos[4], vz=e_pos[5])
     print("Added Earth...")
 
 
-    [mr_pos, lt] = spice.spkezr('4', t_start, 'J2000', 'NONE', 'SUN')
+    [mr_pos, lt] = spice.spkezr('4', t_start, 'ECLIPJ2000', 'NONE', 'SUN')
     mr_pos = spice.convrt(mr_pos, 'KM', 'AU')
     sim.add(m=MASS_MR/MASS_SUN, x=mr_pos[0], y=mr_pos[1], z=mr_pos[2], 
             vx=mr_pos[3], vy=mr_pos[4], vz=mr_pos[5])
@@ -61,7 +61,7 @@ def perihelion(age = 2000):
 
 
 
-    [v_pos, lt] = spice.spkezr('VENUS', t_start, 'J2000', 'NONE', 'SUN')
+    [v_pos, lt] = spice.spkezr('VENUS', t_start, 'ECLIPJ2000', 'NONE', 'SUN')
     v_pos = spice.convrt(v_pos, 'KM', 'AU')
     sim.add(m=MASS_V/MASS_SUN, x=v_pos[0], y=v_pos[1], z=v_pos[2], 
             vx=v_pos[3], vy=v_pos[4], vz=v_pos[5])
@@ -69,7 +69,7 @@ def perihelion(age = 2000):
 
 
 
-    [hg_pos, lt] = spice.spkezr('MERCURY', t_start, 'J2000', 'NONE', 'SUN')
+    [hg_pos, lt] = spice.spkezr('MERCURY', t_start, 'ECLIPJ2000', 'NONE', 'SUN')
     hg_pos = spice.convrt(hg_pos, 'KM', 'AU')
     sim.add(m=MASS_HG/MASS_SUN, x=hg_pos[0], y=hg_pos[1], z=hg_pos[2], 
             vx=hg_pos[3], vy=hg_pos[4], vz=hg_pos[5])
