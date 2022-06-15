@@ -75,8 +75,8 @@ if (__name__ == "__main__"):
 
     n_part = 10000
     if (model % 3 == 2):
-        b_max = max_beta(int(k/100), orbit, n=1000); #distr models
-        n_part = 100000
+        b_max = max_beta(int(k/100), orbit, n=100); #distr models
+        n_part = 10000
     else: b_max = .052
 
 

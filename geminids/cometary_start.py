@@ -53,7 +53,7 @@ def init_loc(k, orbit, n=100):
         t_weight = (idx(k+1, ascending, decending, r_bounds, peri, n) -
                     idx(k-1, ascending, decending, r_bounds, peri, n))/2
 
-    print(t_weight, file=sys.stderr)
+    t_weight = np.abs(t_weight)
     return orbit[idxk], r[idxk], t_weight
 
 def max_beta(k, orbit, n=100):
@@ -71,4 +71,4 @@ def max_beta_r(r):
     Returns the maximum beta that will survive for a particle released at r
     along 3200 Phaethon's orbut
     """
-    return np.max((np.hstack((r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.4))))
+    return np.min((np.hstack((r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.4))))
