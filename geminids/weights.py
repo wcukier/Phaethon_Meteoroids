@@ -40,7 +40,7 @@ def weight_cometary(b, r, t):
     arr[mask][asteroidal(b[mask]) > 10] = 0
     arr[mask][asteroidal(b[mask]) < 1e-16] = 0
     arr[~mask] = 0
-    return np.abs(arr/100) / (r ** 2) * t
+    return np.abs(arr/100) / (r ** 4) * t
 
 def weight_novelc(b):
 

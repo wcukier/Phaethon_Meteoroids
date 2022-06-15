@@ -19,7 +19,7 @@ def perihelion(age = 2000):
     beg -= age*year
     end = 2*year
 
-    pts_per_year = 365*24*60
+    pts_per_year = 365*24*600
     n_particles = 1
     n_years = 2
 
