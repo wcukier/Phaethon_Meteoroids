@@ -17,5 +17,6 @@ output/*/*
 .DS_Store
 output/.DS_Store
 *.zip
+cache/*
 .vscode/*
 Run_Model.ipynb
