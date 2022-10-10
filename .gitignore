@@ -21,3 +21,4 @@ output/.DS_Store
 cache/*
 .vscode/*
 Run_Model.ipynb
+cache/masses.npy
