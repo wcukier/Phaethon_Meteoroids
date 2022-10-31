@@ -12,6 +12,19 @@ from tqdm import tqdm
 from .constants import *
 
 def perihelion(age = 2000):
+    """
+    Calculates the location a perihelion of Phaethon (3200) that occured within
+    2 years of age
+
+    Args:
+    age (int, optional): How long in the past to calculate the perihelion of
+                        (3200) Phaethon. Defaults to 2000.
+
+    Returns:
+     perihelion (ndarray): Position vector of the perihelion location
+     t_start (float): The ephemeris time of when the perihelion occured
+     xy (ndarray): The state vectors of the 2 year period that contains the perihelion
+    """
     spice.furnsh( 'data/meta.tm' )
     t_start = spice.str2et('1600-01-01')
     beg = spice.str2et('2018 A.D. Jan 1')

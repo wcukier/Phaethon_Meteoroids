@@ -12,9 +12,6 @@ from .constants import *
 
 
 def idx(k, ascending, decending, r_bounds, peri, n):
-    """
-    Returns the index of orbit the kth particle.
-    """
 
     if (k < int(n/2)):
         return int(decending(np.flip(r_bounds)[k]))
@@ -29,6 +26,22 @@ def init_loc(k, orbit, n=100):
     from the sun, on either side of perihelion.  Assumes that orbit has, in this
     order, an aphelion, perihelion, and an aphelion.  Returns the kth such
     point and the relative time spent at that point.
+
+    Args:
+        k (int): The point to be selected.  This selects a point k/n through the
+                                            orbit
+        orbit (ndarray): An array of state vectors that represent the orbit of
+                        the parent body.  Must have, in this order, an aphelion,
+                        a perihelion, and then an aphelion
+        n (int, optional): The number of points to divide the orbit into
+
+    Returns:
+        loc (ndarray):  The position vector of the kth point
+        r (float, m): The radial distace of the particle from the sun at the returned
+                    position vector
+        t(float):  The amount of time that the particle spends between points.
+                    Can also be considered the amount of time that this point is
+                    representative of the particle
     """
 
     r = np.sqrt(orbit[:,0]**2 + orbit[:,1]**2 + orbit[:,2]**2)
@@ -61,6 +74,17 @@ def max_beta(k, orbit, n=100):
     Returns the maximum beta that will survive for the kth release location
     along the given orbit assuming a total of n such locations are calculated
     using init_loc.
+
+    Args:
+        k (int): The number of the particle being considered
+        orbit (ndarray)): An array of state vectors representing the orbit of
+                        the particle
+        n (int, optional): The total number of particles that the orbit is
+                            divided into.  Defaults to 100.
+
+    Returns:
+        max_beta (float): The beta value above which the particle would not be
+                            bound.
     """
 
     y0, r, t = init_loc(k, orbit, n)
@@ -69,6 +93,13 @@ def max_beta(k, orbit, n=100):
 def max_beta_r(r):
     """
     Returns the maximum beta that will survive for a particle released at r
-    along 3200 Phaethon's orbut
+    along 3200 Phaethon's orbit
+
+    Args:
+        r (float, m): The radial distance from the release point to the sun
+
+    Returns:
+        beta_m: The beta value above which the particle would not be
+                            bound if released from this location.
     """
     return np.min((np.hstack((r*AU_TO_M/(2 * PHAETHON_SEMI_MAJOR), 0.4))))

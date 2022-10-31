@@ -17,16 +17,18 @@ au = 1.495978707e11 # m/AU
 s = 1.68
 m1 = 1e-2
 
-def inv_mass_distr(x, m0 = 1e-7):
-    c = (1-s)/(m1**(1-s) - m0 ** (1-s) )
-    return ((1-s)/c*x + m0**(1-s))**(1/(1-s))
-
-def gen_mass(n, m0 = 1e-7):
-    x = np.random.rand(n)
-    return inv_mass_distr(x, m0)
-
 
 def calc_speed(m):
+    """
+    Assigns a speed to each particle based on its mass and a maxwellian
+    distribution
+
+    Args:
+        m (ndarray, g): The masses of the particles
+
+    Returns:
+        speeds (ndarray, m/s): The speeds of the particles
+    """
     v_c = 1/.4
     w=1
     v_a = v_c * np.power(m, 0.1)
@@ -45,6 +47,26 @@ def calc_speed(m):
     return v_a
 
 def particles(n, model, max_b=20):
+    """
+    Generates n particles properly spaced in beta-space with appropriate
+    relative velocities for each particle
+
+    Args:
+        n (int): The number of particles
+        model (int): The integer that corresponds with the model type
+                            - 0 or 3: Base Model
+                            - 1 or 4: Violent Creation Model
+                            - 2 or 5: Cometary Creation Model
+                            - 0-2: Asteroidal Composition
+                            - 3-5: Young Cometary Composition
+        max_b (int, optional): The maximum value for beta.  All returned
+                                particles will be less than this Defaults to 20.
+
+    Returns:
+        beta (ndarray, dimentionless): The beta values of the particles
+        mass (ndarray, g): The mass of the particles
+        vel (ndarray, m/s): The velocities of the particles
+    """
     if (max_b < .06): m0 = 1e-7;
     
     beta = np.array([])

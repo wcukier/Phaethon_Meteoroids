@@ -17,6 +17,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 from tqdm import tqdm
+sys.path.append('../..')
+from geminids import generateBeta
 
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.coverage']
@@ -27,6 +29,10 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 master_doc = "index"
+
+html_sidebars = {
+   '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

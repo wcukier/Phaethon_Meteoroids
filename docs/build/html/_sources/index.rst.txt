@@ -1,16 +1,26 @@
 Welcome to Geminids Meteoroids's documentation!
 ===============================================
 
-
-
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   data_analysis
-   beta2mass
+   installation
+   setup
+   cite
+   code
 
+
+
+Installation
+------------
+
+
+Setup
+-----
+
+Citing this Code
+----------------
 
 Indices and tables
 ==================
