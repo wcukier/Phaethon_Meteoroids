@@ -1,8 +1,6 @@
-"""read_data.py
-author: Wolf Cukier
-
-A set of functions to help with data processing
-"""
+#read_data.py
+#author: Wolf Cukier
+#A set of functions to help with data processing
 import numpy as np
 from tqdm import tqdm
 from matplotlib import pyplot as plt
@@ -29,14 +27,16 @@ def load(n: int, model: int, pth=None):
     Args:
         n (int): number of files to load in
         model (int): 0 for novel, 1 for vel, 2 for distr
-        pth (str, optional): _description_. Defaults to "../output/{model}"
-        where {model} is the string representation of the model num
+        pth (str, optional):  The path to read the data in from.
+                            Defaults to "../output/{model}"
+                            where {model} is the string representation of
+                            the model num
 
     Returns:
-        np.ndarray(200000*n,5): An array which cointains the x,y,z,weight and
+        points(ndarray(200000*n,5)): An array which cointains the x,y,z,weight and
                                 either the beta or r value (r for distr, beta
                                 otherwise)
-        float:                  The unnormalized mass of the stream
+        mass(float):                  The unnormalized mass of the stream
     """
 
 
@@ -88,13 +88,13 @@ def load(n: int, model: int, pth=None):
 
 def load_all_data():
     """Loads all simulation data into 3 lists.  The first elements of the list
-    always corresponds to the novel model, second to the vel model, thrid to the
+    always corresponds to the novel model, second to the vel model, third to the
     distr model.
 
     Returns:
-        list of ndarrays -- points
-        list of ndarrays -- orbital elements
-        list of floats -- masses
+        points(list of ndarray): The state vectors outputted by the three models
+        orbital elements(list of ndarray): The orbital elements outputted by the three models
+        masses(list of floats): The unnormalized masses for each model
     """
     n = [100, 100, 1000]
 
@@ -136,7 +136,7 @@ def get_phaethon_orbit():
     """Returns the orbit of (3200) Phaethon as an array
 
     Returns:
-        np.ndarray(): Position vectors of (3200) Phaethon in ECLIP_J2000 cords
+        orbit_phaethon (ndarray): Position vectors of (3200) Phaethon in ECLIP_J2000 cords
     """
     orbit = np.load("data/phaethon.npy")
     orbit = orbit.reshape((20000,5))[:,:3].copy()
@@ -148,7 +148,7 @@ def get_parker_orbit():
     in ecliptic J2000 cords
 
     Returns:
-        np.ndarray: Position vectors of PSP
+        orbit_parker(ndarray): Position vectors of PSP
     """
     psp = np.load("data/psp.npy")
     psp = psp[:,:3].copy()
@@ -213,6 +213,8 @@ def view_perihelion(points, orbit, psp):
         points (ndarray): The simulation output
         orbit (ndarray): The orbit of (3200) phaethon
         psp (ndarray): The orbit of PSP
+    Returns:
+        None
     """
     peri = _find_perihelion(orbit)
 
@@ -278,8 +280,8 @@ def fit_perihelion(points, orbit):
         orbit (ndarray): The orbit of (3200) Phaethon
 
     Returns:
-        Pretend its an object: a bunch of parameters that describe the fitted
-        curve
+        Curve params (Pretend its an object): a bunch of parameters that
+                                            describe the fitted curve
     """
     peri = _find_perihelion(orbit)
 
@@ -461,20 +463,20 @@ def load_elements(n:int, model:int, pth=None):
     Args:
         n (int): number of files to load in
         model (int): 0 for novel, 1 for vel, 2 for distr
-        pth (str, optional): _description_. Defaults to "../output/{model}"
-        where {model} is the string representation of the model num
+        pth (str, optional): Path to load data from. Defaults to "../output/{model}"
+                where {model} is the string representation of the model num
 
     Returns:
-        np.ndarray(200000*n,8): array that contains the following data for each
+        orbital_elements(ndarray(200000*n,8)): array that contains the following data for each
                                 particle (second index):
-                                0: semi-major axis (au)
-                                1: eccentricity (dimentionless)
-                                2: inclination (degrees)
-                                3: argument of pericenter (degrees)
-                                4: longitude of ascending node (degrees)
-                                5: mass (grams? #TODO check this)
-                                6: beta (dimentionless)
-                                7: weight (as in how many particles it reps)
+                                    - 0: semi-major axis (au)
+                                    - 1: eccentricity (dimentionless)
+                                    - 2: inclination (degrees)
+                                    - 3: argument of pericenter (degrees)
+                                    - 4: longitude of ascending node (degrees)
+                                    - 5: mass (grams)
+                                    - 6: beta (dimentionless)
+                                    - 7: weight (as in how many particles it reps)
     """
 
 
@@ -520,6 +522,8 @@ def plot_elements(elements_novel, elements_vel, elements_distr,
         pth (str, optional): where to save the file. Saves to "{pth}_{i}" where
                              i is the plotted index.
                              Defaults to "../figures/elements".
+    Returns:
+        None
     """
     t = np.arange(1998)
 
@@ -564,8 +568,15 @@ def spectogram_plot(orig_points, min_y=0, max_y=1, bins=40):
     Given a set of points in ECLIPJ2000, plots the points along the orbit of
     (3200) Phaethon as a function of the radial distance from Phaethon.
 
-    Plots only points between min_y and max_y distance from the orbit and passes
-    bins to the hexbin plot to control resolution
+    Args:
+        orig_points(ndarray): The set of points to be plotted
+        min_y (float, optional): The minimum distance from the orbit to plot.
+                                Defaults to 0.
+        max_y (float, optional): The maximum distance from the orbit to plot.
+                                Defaults to 1.
+        bins(int, optional): The number of bins to pass to plt.hexbin()
+    Returns:
+        None
     """
 
     orbit = get_phaethon_orbit()
@@ -709,8 +720,9 @@ def generate_KDTree(points, m_cutoff, d_min, d_max):
 
 
     Returns:
-        Points: The filtered points
-        KDTree: A KDTree of the filtered points
+
+            Points (ndarray): The filtered points
+            KDTree (scipy KDTree): A KDTree of the filtered points
     """
     d = np.sqrt(points[:,0]**2 + points[:,1]**2 + points[:,2]**2)
     points = points[np.logical_not(np.logical_or(d > d_max, d < d_min))]
@@ -720,7 +732,8 @@ def generate_KDTree(points, m_cutoff, d_min, d_max):
     return points_m4, KDTree(points_m4[~np.isnan(points_m4).any(axis=1)][:,:3])
 
 def rate_at_earth(points, KDTrees, r=0.05, n=8000):
-    """Takes a list of sets of points and a list of KDTrees and returns
+    """
+    Takes a list of sets of points and a list of KDTrees and returns
         a list of the rate of impacts at Earth, along with the longitude at which
         said impacts took place
 
@@ -733,7 +746,7 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000):
     Returns:
         rates(list of ndarray): The rate of impact at each moment in time
         long(ndarray): The longitude of Earth at each point in time
-        t: The times for which these calculations were done
+        t(ndarray): The times for which these calculations were done
     """
     spice.furnsh("data/meta.tm")
     t_act = np.load('data/t-3200.npy')
@@ -763,21 +776,23 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000):
 
 
 def rate_at_psp(points, KDTrees, masses, r=0.05, n=8000, norm=1e15):
-    """Takes a list of sets of points and a list of KDTrees and returns
+    """
+    Takes a list of sets of points and a list of KDTrees and returns
         a list of the rate of impacts at PSP
 
     Args:
         points (list of ndarray): The filtered pointes
         KDTrees (list of KDTrees): The kd tree of points
         masses (ndarray): The unnormalized masses
-        norm (float or ndarray): The mass to normalize to.
-                                If an array, must be the same length as points
         r (float, optional): The search radius. Defaults to 0.05.
         n (int, optional): The temporal resolution. Defaults to 8000.
+        norm (float or ndarray, optional): The mass to normalize to.
+                        If an array, must be the same length as points.
+                        Defaults to 1e15
 
     Returns:
         rates(list of ndarray): The rate of impact at each moment in time
-        t: The times for which these calculations were done
+        t(ndarray): The times for which these calculations were done
     """
     p_vel = 1.1e5 # The speed of (3200) Phaethon at perihelion, m/s
     spice.furnsh("data/meta.tm")
@@ -810,10 +825,10 @@ def calibrated_mass(mass, rate):
     """Returns the mass of the stream as estimated by the model.
 
     Args:
-        mass (float): The mass of the particles in the stream
-        rate (ndarray): The rate the particles hit earth
+        mass (float, grams): The mass of the particles in the stream
+        rate (ndarray, inverse seconds): The rate the particles hit earth
     Returns:
-        float: The estimated mass of the stream
+        mass (float, grams) : The estimated mass of the stream
     """
     return mass * PEAK_DENSITY/np.max(rate)
 
@@ -828,7 +843,7 @@ def plot_at_earth(rates, long, labels, plot_cmor=True):
                                     Defaults to True.
 
     Returns:
-        list of floats: The solar longitudes where each model peaks
+        long(list of floats): The solar longitudes where each model peaks
     """
     cmor = np.genfromtxt("data/cmor.txt", delimiter = ',')
     fig = plt.figure()
@@ -862,8 +877,9 @@ def plot_at_earth(rates, long, labels, plot_cmor=True):
 
 
 def plot_at_psp(rates, t, labels):
-    """Plots the estimated meteoriod fluxes of each model suplied in rates at
-        psp during orbit 4? #TODO check the orbit
+    """
+    Plots the estimated meteoriod fluxes of each model suplied in rates at
+        psp during orbit 4
 
     Args:
         rates (list of ndarray): The rates at earth for each model
@@ -871,7 +887,8 @@ def plot_at_psp(rates, t, labels):
         labels (list of strings): The labels for each model for plotting
 
 
-    Returns: None
+    Returns:
+        None
     """
     impact = pd.read_csv('data/psp_imp_rate_orb04.txt', sep = '\s+')
     spice.furnsh("data/meta.tm")
@@ -910,6 +927,9 @@ def adjustment_factor(limiting_mass_used, CMOR_limit=1.8e-4, m_min=1e-9,
                                         simulation. Defaults to 10
         s (float, dimentionless, optional): The power law index for the geminids
                                             Defaults to 1.68
+
+    Returns:
+        adjustment_factor (float, dimentionless)
     """
     frac_registed = 1 - ((limiting_mass_used**(1-s) - m_min**(1-s))
                      / (m_max**(1-s) - m_min**(1-s)))
