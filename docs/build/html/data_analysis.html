@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>read_data.py &mdash; Geminids Meteoroids 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="beta2mass.py" href="beta2mass.html" />
+    <link rel="prev" title="Code" href="code.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Geminids Meteoroids
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">read_data.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.adjustment_factor"><code class="docutils literal notranslate"><span class="pre">adjustment_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.calibrated_mass"><code class="docutils literal notranslate"><span class="pre">calibrated_mass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.fit_perihelion"><code class="docutils literal notranslate"><span class="pre">fit_perihelion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.generate_KDTree"><code class="docutils literal notranslate"><span class="pre">generate_KDTree()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.get_parker_orbit"><code class="docutils literal notranslate"><span class="pre">get_parker_orbit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.get_phaethon_orbit"><code class="docutils literal notranslate"><span class="pre">get_phaethon_orbit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.load_all_data"><code class="docutils literal notranslate"><span class="pre">load_all_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.load_elements"><code class="docutils literal notranslate"><span class="pre">load_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.plot_at_earth"><code class="docutils literal notranslate"><span class="pre">plot_at_earth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.plot_at_psp"><code class="docutils literal notranslate"><span class="pre">plot_at_psp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.plot_column_density"><code class="docutils literal notranslate"><span class="pre">plot_column_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.plot_elements"><code class="docutils literal notranslate"><span class="pre">plot_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.rate_at_earth"><code class="docutils literal notranslate"><span class="pre">rate_at_earth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.rate_at_psp"><code class="docutils literal notranslate"><span class="pre">rate_at_psp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.spectogram_plot"><code class="docutils literal notranslate"><span class="pre">spectogram_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.read_data.view_perihelion"><code class="docutils literal notranslate"><span class="pre">view_perihelion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="beta2mass.html">beta2mass.py</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Geminids Meteoroids</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="code.html">Code</a> &raquo;</li>
+      <li>read_data.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data_analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-geminids.read_data">
+<span id="read-data-py"></span><h1>read_data.py<a class="headerlink" href="#module-geminids.read_data" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.adjustment_factor">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">adjustment_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limiting_mass_used</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CMOR_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00018</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.68</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.adjustment_factor" title="Permalink to this definition"></a></dt>
+<dd><p>Factor to adjust the mass by to compensate for the fact that our model
+theoretically detects a larger fraction of particles than CMOR would</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limiting_mass_used</strong> (<em>float</em><em>, </em><em>grams</em>) – The limiting mass used to simulate
+collisions with earth</p></li>
+<li><p><strong>CMOR_limit</strong> (<em>float</em><em>, </em><em>grams</em><em>, </em><em>optional</em>) – The minimal mass CMOR can observe.
+Defaults to 1.8e-4.</p></li>
+<li><p><strong>m_min</strong> (<em>float</em><em>, </em><em>grams</em><em>, </em><em>optional</em>) – The minimum mass of particle used in the
+simulation. Defaults to 1e-9</p></li>
+<li><p><strong>m_max</strong> (<em>float</em><em>, </em><em>grams</em><em>, </em><em>optional</em>) – The maximum mass of particle used in the
+simulation. Defaults to 10</p></li>
+<li><p><strong>s</strong> (<em>float</em><em>, </em><em>dimentionless</em><em>, </em><em>optional</em>) – The power law index for the geminids
+Defaults to 1.68</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>adjustment_factor</strong> (<em>float, dimentionless</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.calibrated_mass">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">calibrated_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.calibrated_mass" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the mass of the stream as estimated by the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mass</strong> (<em>float</em><em>, </em><em>grams</em>) – The mass of the particles in the stream</p></li>
+<li><p><strong>rate</strong> (<em>ndarray</em><em>, </em><em>inverse seconds</em>) – The rate the particles hit earth</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mass</strong> (<em>float, grams</em>) – The estimated mass of the stream</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.fit_perihelion">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">fit_perihelion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.fit_perihelion" title="Permalink to this definition"></a></dt>
+<dd><p>Attempts to fit a curve to the core of the stream near perihelion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>ndarray</em>) – The simulation output</p></li>
+<li><p><strong>orbit</strong> (<em>ndarray</em>) – The orbit of (3200) Phaethon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Curve params</strong> (<em>Pretend its an object</em>) – a bunch of parameters that
+describe the fitted curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.generate_KDTree">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">generate_KDTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_cutoff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.generate_KDTree" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a set of points and returns a KDTree of those points (filtered for
+only points within d_min of d_max and of at least mass cutoff)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>ndarray</em>) – The set of particles generated by the model</p></li>
+<li><p><strong>m_cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum mass to be included in the tree.
+Defaults to 1e-5.</p></li>
+<li><p><strong>d_min</strong> (<em>float</em>) – The minumum distance cutoff in AU</p></li>
+<li><p><strong>d_max</strong> (<em>float</em>) – The maximum distance cutoff in AU</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Points</strong> (<em>ndarray</em>) – The filtered points</p></li>
+<li><p><strong>KDTree</strong> (<em>scipy KDTree</em>) – A KDTree of the filtered points</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.get_parker_orbit">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">get_parker_orbit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.get_parker_orbit" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the orbit of Parker Solar Probe near perihelion during orbit 4
+in ecliptic J2000 cords</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>orbit_parker</strong> (<em>ndarray</em>) – Position vectors of PSP</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.get_phaethon_orbit">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">get_phaethon_orbit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.get_phaethon_orbit" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the orbit of (3200) Phaethon as an array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>orbit_phaethon</strong> (<em>ndarray</em>) – Position vectors of (3200) Phaethon in ECLIP_J2000 cords</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.load">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.load" title="Permalink to this definition"></a></dt>
+<dd><p>Reads in data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – number of files to load in</p></li>
+<li><p><strong>model</strong> (<em>int</em>) – 0 for novel, 1 for vel, 2 for distr</p></li>
+<li><p><strong>pth</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to read the data in from.
+Defaults to “../output/{model}”
+where {model} is the string representation of
+the model num</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>points</strong> (<em>ndarray(200000*n,5)</em>) – An array which cointains the x,y,z,weight and
+either the beta or r value (r for distr, beta
+otherwise)</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – The unnormalized mass of the stream</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.load_all_data">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">load_all_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.load_all_data" title="Permalink to this definition"></a></dt>
+<dd><p>Loads all simulation data into 3 lists.  The first elements of the list
+always corresponds to the novel model, second to the vel model, third to the
+distr model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>list of ndarray</em>) – The state vectors outputted by the three models</p></li>
+<li><p><strong>orbital elements</strong> (<em>list of ndarray</em>) – The orbital elements outputted by the three models</p></li>
+<li><p><strong>masses</strong> (<em>list of floats</em>) – The unnormalized masses for each model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.load_elements">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">load_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.load_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Reads in the orbital elements of the model</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – number of files to load in</p></li>
+<li><p><strong>model</strong> (<em>int</em>) – 0 for novel, 1 for vel, 2 for distr</p></li>
+<li><p><strong>pth</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to load data from. Defaults to “../output/{model}”
+where {model} is the string representation of the model num</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>orbital_elements</strong> (<em>ndarray(200000*n,8)</em>) – array that contains the following data for each
+particle (second index):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0: semi-major axis (au)</p></li>
+<li><p>1: eccentricity (dimentionless)</p></li>
+<li><p>2: inclination (degrees)</p></li>
+<li><p>3: argument of pericenter (degrees)</p></li>
+<li><p>4: longitude of ascending node (degrees)</p></li>
+<li><p>5: mass (grams)</p></li>
+<li><p>6: beta (dimentionless)</p></li>
+<li><p>7: weight (as in how many particles it reps)</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.plot_at_earth">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">plot_at_earth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_cmor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.plot_at_earth" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the peak-normalized fluxes of each model suplied in rates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rates</strong> (<em>list</em><em> of </em><em>ndarray</em>) – The rates at earth for each model</p></li>
+<li><p><strong>long</strong> (<em>ndarray</em>) – The solar longitude each rate was estimated at</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em> of </em><em>strings</em>) – The labels for each model for plotting</p></li>
+<li><p><strong>plot_cmor</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to plot cmor data.
+Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>long</strong> (<em>list of floats</em>) – The solar longitudes where each model peaks</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.plot_at_psp">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">plot_at_psp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.plot_at_psp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Plots the estimated meteoriod fluxes of each model suplied in rates at</dt><dd><p>psp during orbit 4</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rates</strong> (<em>list</em><em> of </em><em>ndarray</em>) – The rates at earth for each model</p></li>
+<li><p><strong>t</strong> (<em>ndarray</em>) – The times the rates were calculated for</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em> of </em><em>strings</em>) – The labels for each model for plotting</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>None</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.plot_column_density">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">plot_column_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xy'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.plot_column_density" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the colum density of the given points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>ndarray</em>) – the points generated by the n-body simulations</p></li>
+<li><p><strong>orbit</strong> (<em>ndarray</em><em>, </em><em>optional</em>) – the orbit of (3200) Phaethon.
+Defaults to None.</p></li>
+<li><p><strong>psp</strong> (<em>ndarray</em><em>, </em><em>optional</em>) – the orbit of psp. Defaults to None.</p></li>
+<li><p><strong>grid_size</strong> (<em>int</em><em>, </em><em>optional</em>) – grid resolution. Defaults to 50.</p></li>
+<li><p><strong>plane</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_. Defaults to ‘xy’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.plot_elements">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">plot_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements_novel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements_distr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../figures/elements'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.plot_elements" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Takes in the elements for the novel, vel, and distr and plots</dt><dd><p>them against time</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elements_novel</strong> (<em>ndarray</em>) – The orbital elements from the novel model</p></li>
+<li><p><strong>elements_vel</strong> (<em>ndarray</em>) – The orbital elements from the vel model</p></li>
+<li><p><strong>elements_distr</strong> (<em>ndarray</em>) – The orbital elements from the distr model</p></li>
+<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – if True will save a file. Defaults to True.</p></li>
+<li><p><strong>pth</strong> (<em>str</em><em>, </em><em>optional</em>) – where to save the file. Saves to “{pth}_{i}” where
+i is the plotted index.
+Defaults to “../figures/elements”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>None</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.rate_at_earth">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">rate_at_earth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">KDTrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.rate_at_earth" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Takes a list of sets of points and a list of KDTrees and returns</dt><dd><p>a list of the rate of impacts at Earth, along with the longitude at which
+said impacts took place</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>list</em><em> of </em><em>ndarray</em>) – The filtered pointes</p></li>
+<li><p><strong>KDTrees</strong> (<em>list</em><em> of </em><em>KDTrees</em>) – The kd tree of points</p></li>
+<li><p><strong>r</strong> (<em>float</em><em>, </em><em>optional</em>) – The search radius. Defaults to 0.05.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – The temporal resolution. Defaults to 8000.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rates</strong> (<em>list of ndarray</em>) – The rate of impact at each moment in time</p></li>
+<li><p><strong>long</strong> (<em>ndarray</em>) – The longitude of Earth at each point in time</p></li>
+<li><p><strong>t</strong> (<em>ndarray</em>) – The times for which these calculations were done</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.rate_at_psp">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">rate_at_psp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">KDTrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000000000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.rate_at_psp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Takes a list of sets of points and a list of KDTrees and returns</dt><dd><p>a list of the rate of impacts at PSP</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>list</em><em> of </em><em>ndarray</em>) – The filtered pointes</p></li>
+<li><p><strong>KDTrees</strong> (<em>list</em><em> of </em><em>KDTrees</em>) – The kd tree of points</p></li>
+<li><p><strong>masses</strong> (<em>ndarray</em>) – The unnormalized masses</p></li>
+<li><p><strong>r</strong> (<em>float</em><em>, </em><em>optional</em>) – The search radius. Defaults to 0.05.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – The temporal resolution. Defaults to 8000.</p></li>
+<li><p><strong>norm</strong> (<em>float</em><em> or </em><em>ndarray</em><em>, </em><em>optional</em>) – The mass to normalize to.
+If an array, must be the same length as points.
+Defaults to 1e15</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rates</strong> (<em>list of ndarray</em>) – The rate of impact at each moment in time</p></li>
+<li><p><strong>t</strong> (<em>ndarray</em>) – The times for which these calculations were done</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.spectogram_plot">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">spectogram_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orig_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.spectogram_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Given a set of points in ECLIPJ2000, plots the points along the orbit of
+(3200) Phaethon as a function of the radial distance from Phaethon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>orig_points</strong> (<em>ndarray</em>) – The set of points to be plotted</p></li>
+<li><p><strong>min_y</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum distance from the orbit to plot.
+Defaults to 0.</p></li>
+<li><p><strong>max_y</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum distance from the orbit to plot.
+Defaults to 1.</p></li>
+<li><p><strong>bins</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of bins to pass to plt.hexbin()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>None</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.read_data.view_perihelion">
+<span class="sig-prename descclassname"><span class="pre">geminids.read_data.</span></span><span class="sig-name descname"><span class="pre">view_perihelion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.read_data.view_perihelion" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the output near perihelion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>ndarray</em>) – The simulation output</p></li>
+<li><p><strong>orbit</strong> (<em>ndarray</em>) – The orbit of (3200) phaethon</p></li>
+<li><p><strong>psp</strong> (<em>ndarray</em>) – The orbit of PSP</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>None</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code.html" class="btn btn-neutral float-left" title="Code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beta2mass.html" class="btn btn-neutral float-right" title="beta2mass.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Wolf Cukier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

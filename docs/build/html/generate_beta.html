@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>generateBeta.py &mdash; Geminids Meteoroids 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="perihelion.py" href="perihelion.html" />
+    <link rel="prev" title="cometary_start.py" href="cometary_start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Geminids Meteoroids
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Citation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="beta2mass.html">beta2mass.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cometary_start.html">cometary_start.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">generateBeta.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.generateBeta.calc_speed"><code class="docutils literal notranslate"><span class="pre">calc_speed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geminids.generateBeta.particles"><code class="docutils literal notranslate"><span class="pre">particles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="perihelion.html">perihelion.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read_data.html">read_data.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weights.html">weights.py</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Geminids Meteoroids</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="code.html">Code</a> &raquo;</li>
+      <li>generateBeta.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/generate_beta.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-geminids.generateBeta">
+<span id="generatebeta-py"></span><h1>generateBeta.py<a class="headerlink" href="#module-geminids.generateBeta" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.generateBeta.calc_speed">
+<span class="sig-prename descclassname"><span class="pre">geminids.generateBeta.</span></span><span class="sig-name descname"><span class="pre">calc_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.generateBeta.calc_speed" title="Permalink to this definition"></a></dt>
+<dd><p>Assigns a speed to each particle based on its mass and a maxwellian
+distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>m</strong> (<em>ndarray</em><em>, </em><em>g</em>) – The masses of the particles</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>speeds</strong> (<em>ndarray, m/s</em>) – The speeds of the particles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geminids.generateBeta.particles">
+<span class="sig-prename descclassname"><span class="pre">geminids.generateBeta.</span></span><span class="sig-name descname"><span class="pre">particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geminids.generateBeta.particles" title="Permalink to this definition"></a></dt>
+<dd><p>Generates n particles properly spaced in beta-space with appropriate
+relative velocities for each particle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – The number of particles</p></li>
+<li><p><strong>model</strong> (<em>int</em>) – The integer that corresponds with the model type
+- 0 or 3: Base Model
+- 1 or 4: Violent Creation Model
+- 2 or 5: Cometary Creation Model
+- 0-2: Asteroidal Composition
+- 3-5: Young Cometary Composition</p></li>
+<li><p><strong>max_b</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum value for beta.  All returned
+particles will be less than this Defaults to 20.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>beta</strong> (<em>ndarray, dimentionless</em>) – The beta values of the particles</p></li>
+<li><p><strong>mass</strong> (<em>ndarray, g</em>) – The mass of the particles</p></li>
+<li><p><strong>vel</strong> (<em>ndarray, m/s</em>) – The velocities of the particles</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cometary_start.html" class="btn btn-neutral float-left" title="cometary_start.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="perihelion.html" class="btn btn-neutral float-right" title="perihelion.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Wolf Cukier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

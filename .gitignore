@@ -1,5 +1,6 @@
 figures/*
 output/*/*
+figs/*
 *.bsp
 *.tls
 *.bp
@@ -17,5 +18,7 @@ output/*/*
 .DS_Store
 output/.DS_Store
 *.zip
+cache/*
 .vscode/*
 Run_Model.ipynb
+cache/masses.npy
