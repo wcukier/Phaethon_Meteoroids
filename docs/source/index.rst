@@ -6,7 +6,8 @@ Welcome to Geminids Meteoroids's documentation!
    :caption: Contents:
 
    installation
-   setup
+   execution
+   data_out
    cite
    code
 

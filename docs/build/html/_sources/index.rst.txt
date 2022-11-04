@@ -1,28 +1,17 @@
 Welcome to Geminids Meteoroids's documentation!
 ===============================================
 
-source
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    installation
-   setup
+   execution
+   data_out
    cite
    code
 
 
-
-Installation
-------------
-
-
-Setup
------
-
-Citing this Code
-----------------
 
 Indices and tables
 ==================

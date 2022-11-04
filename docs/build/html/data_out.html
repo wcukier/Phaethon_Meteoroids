@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation and Setup &mdash; Geminids Meteoroids 0.0 documentation</title>
+  <title>Data Output &mdash; Geminids Meteoroids 0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Setup" href="setup.html" />
-    <link rel="prev" title="Welcome to Geminids Meteoroids’s documentation!" href="index.html" /> 
+    <link rel="next" title="Citation" href="cite.html" />
+    <link rel="prev" title="Execution" href="execution.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,14 +41,12 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation and Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#spice-kernels">SPICE kernels</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#output-directories">Output Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-processing">Data Processing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Citation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code</a></li>
 </ul>
@@ -67,9 +65,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installation and Setup</li>
+      <li>Data Output</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/data_out.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -77,47 +75,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation-and-setup">
-<h1>Installation and Setup<a class="headerlink" href="#installation-and-setup" title="Permalink to this heading"></a></h1>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<p>The code can be downloaded from the Github page: <a class="reference external" href="https://github.com/wcukier/Phaethon_Meteoroids">https://github.com/wcukier/Phaethon_Meteoroids</a></p>
-</section>
-<section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
-<p>The code requires the following packages and versions</p>
+  <section id="data-output">
+<h1>Data Output<a class="headerlink" href="#data-output" title="Permalink to this heading"></a></h1>
+<p>The data outputted by the simulation will be put into the appropriate output directory dependent on the model.  The base model will be put in “output/novel”, the violent creation model in “output/vel”, the cometary creation model in “output/distr”.  The young_comet composition models are put in respective directories with “_comet” appended to the directory.</p>
+<p>Saved are 5 data products</p>
 <ul class="simple">
-<li><p>matplotlib==3.6.1</p></li>
-<li><p>numpy==1.23.3</p></li>
-<li><p>pandas==1.5.1</p></li>
-<li><p>rebound==3.21.0</p></li>
-<li><p>reboundx==3.7.2</p></li>
-<li><p>scipy==1.9.3</p></li>
-<li><p>spiceypy==5.1.2</p></li>
-<li><p>tqdm==4.64.1</p></li>
+<li><p>betaXX.npy: This is the beta value for each of the particles</p></li>
+<li><p>elementsXX.npy: This saves the orbital elements after each year for each particle</p></li>
+<li><p>massXX.npy: This is the mass of each particle in grams</p></li>
+<li><p>particlesXX.npy: This is the state vector of each particle sampled ~10000 times in a 2 year period at the end of the simulation</p></li>
+<li><p>simXX.bin: This is a snapshot of the simulation at the end but before the 2 year period where particles are sampled</p></li>
 </ul>
-<p>These packages can be installed by running the command</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -r requirements.txt
-</pre></div>
-</div>
-<p>from the project folder.</p>
-</section>
-<section id="spice-kernels">
-<h2>SPICE kernels<a class="headerlink" href="#spice-kernels" title="Permalink to this heading"></a></h2>
-<p>There are a number of SPICE kernels that are needed for the code to run.
-Running the file downloadKernals.sh should download all kernals not included in the github.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod +x downloadKernals.sh
-./downloadKernals.sh
-</pre></div>
-</div>
-</section>
-<section id="output-directories">
-<h2>Output Directories<a class="headerlink" href="#output-directories" title="Permalink to this heading"></a></h2>
-<p>To create the output directories run the file createDirs.sh</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod +x createDirs.sh
-./createDirs.sh
-</pre></div>
-</div>
+<section id="data-processing">
+<h2>Data Processing<a class="headerlink" href="#data-processing" title="Permalink to this heading"></a></h2>
+<p>The easiest way to process data is through running the jupyter notebook <code class="code docutils literal notranslate"><span class="pre">scripts/gen_figures.ipynb</span></code></p>
 </section>
 </section>
 
@@ -125,8 +96,8 @@ Running the file downloadKernals.sh should download all kernals not included in 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Geminids Meteoroids’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="setup.html" class="btn btn-neutral float-right" title="Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="execution.html" class="btn btn-neutral float-left" title="Execution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cite.html" class="btn btn-neutral float-right" title="Citation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
