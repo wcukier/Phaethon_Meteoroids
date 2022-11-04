@@ -12,16 +12,6 @@ Welcome to Geminids Meteoroids's documentation!
 
 
 
-Installation
-------------
-
-
-Setup
------
-
-Citing this Code
-----------------
-
 Indices and tables
 ==================
 
