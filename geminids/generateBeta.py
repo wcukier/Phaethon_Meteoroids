@@ -31,7 +31,7 @@ def calc_speed(m):
     """
     v_c = 1/.4
     w=1
-    v_a = v_c * np.power(m, 0.1)
+    v_a = v_c * np.power(m, -0.1)
     v_r = v_a.copy()
 
     
