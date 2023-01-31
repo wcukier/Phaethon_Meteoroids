@@ -29,7 +29,7 @@ def calc_speed(m):
     Returns:
         speeds (ndarray, m/s): The speeds of the particles
     """
-    v_c = 1/.4
+    v_c = 0.182
     w=1
     v_a = v_c * np.power(m, -0.1)
     v_r = v_a.copy()
