@@ -155,7 +155,7 @@ def get_parker_orbit():
     transform = spice.pxform("J2000", "ECLIPJ2000", 0)
     return np.dot(transform, psp.T).T
 
-def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy'):
+def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy', max_mass=np.inf, min_mass=-np.inf):
     """Plots the colum density of the given points
 
     Args:
@@ -164,11 +164,15 @@ def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy'):
                                     Defaults to None.
         psp (ndarray, optional): the orbit of psp. Defaults to None.
         grid_size (int, optional): grid resolution. Defaults to 50.
-        plane (str, optional): _description_. Defaults to 'xy'.
+        plane (str, optional): Which J2000 Plane to plot column densities in. 
+                               Must be a tring containing two of the following 
+                               characters in any order: 'x', 'y', 'z'. Defaults to 'xy'.
+        max_mass (float, optional): The maximum limiting mass to plot.  Defaults to inf.
+        min_mass (float, optional): The minimum limiting mass to plot.  Defaults to -inf.
     """
     i = cords[plane[0]]
     j = cords[plane[1]]
-
+    mask = (points[:, 3] < max_mass) * points[:, 3] < min_mass
 
 
     x = np.linspace(-.5, 2.5, grid_size*2)
@@ -176,8 +180,8 @@ def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy'):
     c = np.zeros((grid_size*2)**2)
     nx, ny = np.meshgrid(x, y)
 
-    poly = plt.hexbin(np.hstack((points[:,i], nx.flatten())),
-                      np.hstack((points[:,j], ny.flatten())),
+    poly = plt.hexbin(np.hstack((points[mask,i], nx.flatten())),
+                      np.hstack((points[mask,j], ny.flatten())),
                       cmap = "plasma",
                       extent = (-.5,2.,-.5,2.),
                       gridsize=grid_size,

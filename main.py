@@ -83,7 +83,8 @@ if (__name__ == "__main__"):
     beta, mass, vel = particles(n_part, model, max_b=b_max) #non-cometary models
     beta = beta[n_particles*k: n_particles*(k+1)]
     mass = mass[n_particles*k: n_particles*(k+1)]
-    vel = vel[n_particles*k: n_particles*(k+1)]
+    vel = vel[n_particles*k: n_particles*(k+1)] * 0
+    print(vel*au, flush=True)
 
     n = n_particles
 
@@ -133,6 +134,7 @@ if (__name__ == "__main__"):
             y0, r, t = init_loc(int(k/100), orbit)
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
+        vel[i] = [0,0,0]
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
     sim.move_to_com()
 
@@ -169,14 +171,14 @@ if (__name__ == "__main__"):
     for i in tqdm(range(int((n_years-window)))):
 
             # Remove close particles
-        for p in sim.particles[n_active:]:
+        for k, p in enumerate(sim.particles[n_active:]):
             h = p.hash
             o = p.calculate_orbit(primary = ps[0])
             if sim.particles[0] ** p < .01 or o.a < MIN_A:
                 try:
                     sim.remove(hash=h)
                     n_escaped +=1
-                    print(f"Number escaped: {n_escaped}")
+                    print(f"Number escaped: {n_escaped} d:{sim.particles[0]**p}, a:{o.a}, beta:{beta[k]}", file=sys.stderr)
                 except: pass
 
                 #Remove far particles
