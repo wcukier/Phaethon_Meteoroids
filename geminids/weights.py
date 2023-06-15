@@ -7,8 +7,8 @@ from .beta2mass import asteroidal as asteroidal
 from .beta2mass import young_comet as young_comet
 import numpy as np
 from .cometary_start import max_beta_r as max_beta_r
+from .constants import s
 
-s = 1.68
 m0 = 1e-9
 m1 = 10
 

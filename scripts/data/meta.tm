@@ -37,5 +37,6 @@ KPL/MK
                        '$PTH/spp_recon_20190416_20190914_v001.bsp',
                        '$PTH/spp_recon_20190120_20190416_v001.bsp',
                        '$PTH/spp_recon_20181008_20190120_v001.bsp',
-                       '$PTH/spp_recon_20180812_20181008_v001.bsp' )
+                       '$PTH/spp_recon_20180812_20181008_v001.bsp',
+                       '$PTH/destiny.bsp' )
    \begintext

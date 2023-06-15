@@ -11,14 +11,17 @@ import matplotlib.dates as mdates
 import pandas as pd
 import spiceypy as spice
 
-from geminids.constants import AU_TO_M
+from geminids.constants import AU_TO_M,s
 from .weights import *
 from .cometary_start import init_loc
 
 
-
 RADIUS_EARTH = 384.4e6 #m
-PEAK_DENSITY = 128/60 * 2.3e-2 /1e3**2/3600 # particles/sec?
+PEAK_DENSITY = 127/((59.2 + 28.7)/2) * 2.3e-2 /1e3**2/3600 # particles/m^2/sec
+#              scale factor from fig   ZHR    (km->m)^2 h->s
+
+
+
 cords = {"x":0, "y":1, "z":2}
 
 def load(n: int, model: int, pth=None):
@@ -155,7 +158,8 @@ def get_parker_orbit():
     transform = spice.pxform("J2000", "ECLIPJ2000", 0)
     return np.dot(transform, psp.T).T
 
-def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy', max_mass=np.inf, min_mass=-np.inf):
+def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy',
+                        max_mass=np.inf, min_mass=-np.inf, extent=(-.5,2,-.5,2)):
     """Plots the colum density of the given points
 
     Args:
@@ -164,26 +168,28 @@ def plot_column_density(points, orbit=None, psp=None, grid_size=50, plane='xy', 
                                     Defaults to None.
         psp (ndarray, optional): the orbit of psp. Defaults to None.
         grid_size (int, optional): grid resolution. Defaults to 50.
-        plane (str, optional): Which J2000 Plane to plot column densities in. 
-                               Must be a tring containing two of the following 
+        plane (str, optional): Which J2000 Plane to plot column densities in.
+                               Must be a tring containing two of the following
                                characters in any order: 'x', 'y', 'z'. Defaults to 'xy'.
         max_mass (float, optional): The maximum limiting mass to plot.  Defaults to inf.
         min_mass (float, optional): The minimum limiting mass to plot.  Defaults to -inf.
+        extent (tuple, optional): extent argument passed to plt.hexbin. Defaults to (-.5,2,-.5,2).
     """
     i = cords[plane[0]]
     j = cords[plane[1]]
-    mask = (points[:, 3] < max_mass) * points[:, 3] < min_mass
+    print(points.shape)
+    mask = (points[:, 3] < max_mass) * (points[:, 3] > min_mass)
+    print(points[mask].shape)
 
-
-    x = np.linspace(-.5, 2.5, grid_size*2)
-    y = np.linspace(-.5, 2.5, grid_size*2)
+    x = np.linspace(extent[0], extent[1], grid_size*2)
+    y = np.linspace(extent[2], extent[3], grid_size*2)
     c = np.zeros((grid_size*2)**2)
     nx, ny = np.meshgrid(x, y)
 
     poly = plt.hexbin(np.hstack((points[mask,i], nx.flatten())),
                       np.hstack((points[mask,j], ny.flatten())),
                       cmap = "plasma",
-                      extent = (-.5,2.,-.5,2.),
+                      extent = extent,
                       gridsize=grid_size,
                       C = np.hstack((points[:,4], c)),
                       reduce_C_function = np.sum)
@@ -275,6 +281,8 @@ def _quadratic(x, a, b, c):
 def _find_perihelion(orbit):
     r = np.sqrt(orbit[:,0]**2 + orbit[:,1]**2 + orbit[:,2]**2)
     return np.argmin(r)
+
+
 
 def fit_perihelion(points, orbit):
     """Attempts to fit a curve to the core of the stream near perihelion
@@ -419,6 +427,7 @@ def plot_residual_fit(peri_fit, color="cyan"):
     plt.legend()
     plt.xlabel(r"Mean Anomonly ($^\circ$)")
     plt.ylabel(r"Radial Offset from 3200 Phaethon ($10^5$ km)")
+    return corr
 
 def plot_smoothed_fit(peri_fit):
     (r,
@@ -537,8 +546,17 @@ def plot_elements(elements_novel, elements_vel, elements_distr,
         plt.plot(t, elements_novel[:,0,index], label = "3200 Phaethon")
 
 
+
+
         mask = (np.any(elements_novel[:,:,5] > 1e-8, axis = 0)
-            * np.any(elements_novel[:,:,5] > 1e-10, axis = 0))
+            * np.any(elements_novel[:,:,5] > 1e-10, axis = 0)
+            * elements_novel[-1,:,0] > 0)
+        if index==3:
+            mask2 = elements_novel[1:,mask,index] < 180
+            elements_novel[1:,mask,index][mask2] += 360
+
+        print(np.max(elements_novel[1:,mask,index]) - np.min(elements_novel[1:,mask,index]))
+
         plt.plot(t[1:],
                  np.sum(elements_novel[1:,mask,index]
                         * elements_novel[1:,mask,7],axis=1)
@@ -546,7 +564,14 @@ def plot_elements(elements_novel, elements_vel, elements_distr,
                  label = "Basic Model")
 
         mask = (np.any(elements_vel[:,:,5] > 1e-8, axis = 0)
-                * np.any(elements_vel[:,:,5] > 1e-10, axis = 0))
+                * np.any(elements_vel[:,:,5] > 1e-10, axis = 0)
+                * elements_vel[-1,:,0] > 0)
+
+        if index==3:
+            mask2 = elements_vel[1:,mask,index] < 180
+            elements_vel[1:,mask,index][mask2] += 360
+        print(np.max(elements_vel[1:,mask,index]) - np.min(elements_vel[1:,mask,index]))
+
         plt.plot(t[1:],
                  np.sum(elements_vel[1:,mask,index]
                         * elements_vel[1:,mask,7], axis = 1)
@@ -554,13 +579,20 @@ def plot_elements(elements_novel, elements_vel, elements_distr,
                  label="Violent Creation" )
 
         mask = (np.any(elements_distr[:,:,5] > 1e-8, axis = 0)
-                * np.any(elements_distr[:,:,5] > 1e-10, axis = 0))
+                * np.any(elements_distr[:,:,5] > 1e-10, axis = 0)
+                * elements_distr[-1,:,0] > 0)
+        if index==3:
+            mask2 = elements_distr[1:,mask,index] < 180
+            elements_distr[1:,mask,index][mask2] += 360
+
+        print(np.max(elements_distr[1:,mask,index]) - np.min(elements_distr[1:,mask,index]))
+
         plt.plot(t[1:],
                  np.sum(elements_distr[1:,mask,index]
                         * elements_distr[1:,mask,7], axis = 1)
                  / np.sum(elements_distr[1:,mask,7], axis=1),
                  label ="Cometary Creation" )
-        plt.legend()
+        if index==4: plt.legend()
 
         if save: plt.savefig(f"{pth}_{index}.eps")
         plt.show()
@@ -735,7 +767,7 @@ def generate_KDTree(points, m_cutoff, d_min, d_max):
 
     return points_m4, KDTree(points_m4[~np.isnan(points_m4).any(axis=1)][:,:3])
 
-def rate_at_earth(points, KDTrees, r=0.05, n=8000):
+def rate_at_earth(points, KDTrees, r=0.05, n=8000, vels=None):
     """
     Takes a list of sets of points and a list of KDTrees and returns
         a list of the rate of impacts at Earth, along with the longitude at which
@@ -751,7 +783,12 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000):
         rates(list of ndarray): The rate of impact at each moment in time
         long(ndarray): The longitude of Earth at each point in time
         t(ndarray): The times for which these calculations were done
+
     """
+    #        vels(ndarray): The average velocity vector of the registered particles
+    #     earth_vels(ndarray): vel of earth at same time as vels
+
+
     spice.furnsh("data/meta.tm")
     t_act = np.load('data/t-3200.npy')
 
@@ -760,13 +797,34 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000):
     rates = np.zeros((len(KDTrees), n))
     t = t_act[np.linspace(0,19999, n, dtype=int)]
     long = np.zeros(t.shape[0])
+    earth_vels = np.zeros((n, 3))
+    avg_vels = np.zeros((n, 3)) * np.nan
+
+    et = spice.str2et('2020-01-01')
+
+    eclip2eq = spice.sxform("ECLIPJ2000", "J2000", et)[3:, 3:]
+
     for i,j in enumerate(tqdm(np.linspace(0,19999, n, dtype=int))):
         [pos, lt] = spice.spkezr("EARTH", t_act[j], "ECLIPJ2000", "NONE", "SUN")
         pos = spice.convrt(pos, "KM", "AU")
         pos_arr[i] = pos[:3]
 
+        earth_loc = eclip2eq @ pos[3:]
+
+        earth_vels[i] = earth_loc
+
+
+
         for k in range(len(KDTrees)):
-            n_particles[k, i] = np.sum(points[k][KDTrees[k].query_ball_point(pos[:3], r), 4])
+            hits =  KDTrees[k].query_ball_point(pos[:3], r)
+            n_particles[k, i] = np.sum(points[k][hits, 4])
+
+            if len(hits) > 0 and np.any(vels != None):
+                hit_pos = np.dot(vels[hits], eclip2eq)
+
+                avg_vels[i] = np.sum(hit_pos * np.vstack([points[k][hits, 4]]*3).T, axis=0)/np.sum(points[k][hits,4])
+
+
 
         pos = spice.convrt(pos, "AU", "M")
         V = 4/3 * np.pi * ((r*AU_TO_M)**3)
@@ -776,7 +834,8 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000):
 
         [pos_eclip, lt] = spice.spkezr("EARTH", t_act[j], "ECLIPJ2000", "NONE", "SUN")
         rad, long[i], lat = spice.reclat(pos_eclip[:3])
-    return rates, long, t
+
+    return rates, long, t, avg_vels, earth_vels
 
 
 def rate_at_psp(points, KDTrees, masses, r=0.05, n=8000, norm=1e15):
@@ -818,7 +877,7 @@ def rate_at_psp(points, KDTrees, masses, r=0.05, n=8000, norm=1e15):
 
         v_psp = np.sqrt(np.sum(psp[i,3:]**2))
         for k in range(len(KDTrees)):
-            rates[k, i] = (n_particles[k, i]/V * 35e3 * norms[k]
+            rates[k, i] = (n_particles[k, i]/V * norms[k]
                             * 5 * (p_vel + v_psp))
 
 
@@ -847,7 +906,8 @@ def plot_at_earth(rates, long, labels, plot_cmor=True):
                                     Defaults to True.
 
     Returns:
-        long(list of floats): The solar longitudes where each model peaks
+        peaks(list of floats): The solar longitudes where each model peaks
+        fwhm (list of floats): The full-width half-max of the rate distribution
     """
     cmor = np.genfromtxt("data/cmor.txt", delimiter = ',')
     fig = plt.figure()
@@ -877,7 +937,14 @@ def plot_at_earth(rates, long, labels, plot_cmor=True):
     plt.xlabel(r"Solar Longitude ($\lambda^\circ$)")
     plt.ylabel("Relative Flux")
     # plt.legend(loc=3)
-    return np.array([long[np.argmax(rate)]/2/np.pi*360+180 for rate in rates])
+
+    peaks = np.array([long[np.argmax(rate)]/2/np.pi*360+180 for rate in rates])
+    left_tails = [long[:np.argmax(rate)][rate[:np.argmax(rate)]<rate[np.argmax(rate)]/2] for rate in rates]
+    right_tails = [long[np.argmax(rate):][rate[np.argmax(rate):]<rate[np.argmax(rate)]/2] for rate in rates]
+
+
+    fwhm = [(right_tails[i][0] - left_tails[i][-1])/2/np.pi*360 for i in range(3)]
+    return peaks, fwhm
 
 
 def plot_at_psp(rates, t, labels):
@@ -916,7 +983,7 @@ def plot_at_psp(rates, t, labels):
     plt.ylabel(r"Impact rate (s$^{-1}$)")
 
 def adjustment_factor(limiting_mass_used, CMOR_limit=1.8e-4, m_min=1e-9,
-                      m_max=10, s=1.68):
+                      m_max=10, s=s):
     """Factor to adjust the mass by to compensate for the fact that our model
     theoretically detects a larger fraction of particles than CMOR would
 
@@ -935,10 +1002,10 @@ def adjustment_factor(limiting_mass_used, CMOR_limit=1.8e-4, m_min=1e-9,
     Returns:
         adjustment_factor (float, dimentionless)
     """
-    frac_registed = 1 - ((limiting_mass_used**(1-s) - m_min**(1-s))
-                     / (m_max**(1-s) - m_min**(1-s)))
+    # frac_registed = 1 - ((limiting_mass_used**(1-s) - m_min**(1-s))
+    #                  / (m_max**(1-s) - m_min**(1-s)))
 
-    frac_observed = 1 - ((CMOR_limit**(1-s) - m_min**(1-s))
-                    / (m_max**(1-s) - m_min**(1-s)))
+    # frac_observed = 1 - ((CMOR_limit**(1-s) - m_min**(1-s))
+    #                 / (m_max**(1-s) - m_min**(1-s)))
 
-    return frac_registed/frac_observed
+    return (limiting_mass_used**(1-s)- m_max**(1-s))/(CMOR_limit**(1-s))

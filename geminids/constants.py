@@ -17,3 +17,4 @@ MASS_HG = 3.3011e23 #kg
 year = 31557600  # Year [s]
 au = AU_TO_M # Astronomical Unit [m]
 PHAETHON_SEMI_MAJOR = 1.2714 * AU_TO_M
+s = 1.68 #power law index

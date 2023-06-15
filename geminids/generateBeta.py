@@ -14,7 +14,7 @@ au = 1.495978707e11 # m/AU
 
 
 
-s = 1.68
+from .constants import s
 m1 = 1e-2
 
 
