@@ -480,8 +480,8 @@ def load_elements(n:int, model:int, pth=None):
                 where {model} is the string representation of the model num
 
     Returns:
-        orbital_elements(ndarray(200000*n,8)): array that contains the following data for each
-                                particle (second index):
+        orbital_elements(ndarray(1998, 200000*n,8)): array that contains the
+                            following data for each particle (second index):
                                     - 0: semi-major axis (au)
                                     - 1: eccentricity (dimentionless)
                                     - 2: inclination (degrees)
