@@ -1,5 +1,8 @@
 KPL/MK
 
+   ***** I belive this kernel is deprecated and should not be /
+   is not in use *********************
+   
    This is the meta-kernel used for the 2021 Geminids Model
    by Wolf Cukier
 
