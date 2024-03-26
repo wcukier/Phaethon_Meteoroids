@@ -29,8 +29,9 @@ from geminids.perihelion import perihelion as perihelion
 from geminids.cometary_start import init_loc as init_loc, max_beta
 
 
-## Main -- python age.py $run_num $model_num $age ##
+## Main -- python main.py $run_num $model_num $age ##
 if (__name__ == "__main__"):
+    MIN_A = 0.2 # min semi-major axis cutoff
 
     # Initialize
     n_escaped = 0
@@ -39,9 +40,9 @@ if (__name__ == "__main__"):
     dr = os.getcwd()
     if   (model == 0): subdir = "novel"
     elif (model == 1): subdir = "vel"
-    elif (model == 2): subdir = "distr"
-    elif (model == 3): subdir = "novel_comet"
-    elif (model == 4): subdir = "vel_comet"
+    elif (model == 2): subdir = "distr" #aka cometary model
+    elif (model == 3): subdir = "novel_comet"   # "_comet" refers to composition
+    elif (model == 4): subdir = "vel_comet"     # not formation
     elif (model == 5): subdir = "distr_comet"
     elif (model == 6): subdir = "novel_old"
     else:
@@ -74,16 +75,22 @@ if (__name__ == "__main__"):
             y0, t_start, orbit = perihelion(age=age)
 
     n_part = 10000
-    if (model % 3 == 2):
-        b_max = max_beta(int(k/1000), orbit, n=1000); #distr models
+    if (model % 3 == 2): #distr models
+        b_max = max_beta(int(k/1000), orbit, n=1000); 
         n_part = 100000
     else: b_max = .052
 
 
     beta, mass, vel = particles(n_part, model, max_b=b_max) #non-cometary models
+    
+    #slice to current run
     beta = beta[n_particles*k: n_particles*(k+1)]
     mass = mass[n_particles*k: n_particles*(k+1)]
+<<<<<<< HEAD
     vel = vel[n_particles*k: n_particles*(k+1)] * 0 #TODO what is this
+=======
+    vel = vel[n_particles*k: n_particles*(k+1)] 
+>>>>>>> 744eef5 (comments)
     print(vel*au, flush=True)
 
     n = n_particles
@@ -130,11 +137,14 @@ if (__name__ == "__main__"):
     # Add particles
     sim.move_to_hel()
     for i in range(n):
-        if ((model % 3) == 2): # Distributed Model -- many starting positions
+        if ((model % 3) == 2): # Cometary Model -- many starting positions
             y0, r, t = init_loc(int(k/100), orbit)
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
+<<<<<<< HEAD
         vel[i] = [0,0,0] # TODO remove
+=======
+>>>>>>> 744eef5 (comments)
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
     sim.move_to_com()
 
@@ -166,22 +176,21 @@ if (__name__ == "__main__"):
     np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
     np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
 
-    MIN_A = 0.2 # Yes, this should be 0.2
     # Simulate for age-2 years
     for i in tqdm(range(int((n_years-window)))):
 
-            # Remove close particles
-        for k, p in enumerate(sim.particles[n_active:]):
+        # Remove close particles particles with small a or just within 0.01 AU of sun
+        for j, p in enumerate(sim.particles[n_active:]):
             h = p.hash
             o = p.calculate_orbit(primary = ps[0])
-            if sim.particles[0] ** p < .01 or o.a < MIN_A:
+            if sim.particles[0] ** p < .01 or o.a < MIN_A: 
                 try:
                     sim.remove(hash=h)
                     n_escaped +=1
-                    print(f"Number escaped: {n_escaped} d:{sim.particles[0]**p}, a:{o.a}, beta:{beta[k]}", file=sys.stderr)
+                    print(f"Number escaped: {n_escaped} d:{sim.particles[0]**p}, a:{o.a}, beta:{beta[j]}", file=sys.stderr)
                 except: pass
 
-                #Remove far particles
+        #Remove far particles
         escaped = True
         while(escaped == True):
             try:
@@ -212,6 +221,9 @@ if (__name__ == "__main__"):
     # Save particle states
     np.save(f"{dr}/output/{subdir}/elements{k}.npy", oribtal_elements)
     sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
+    print(f"Elements should be saved for run {k}", file=sys.stderr)
+    print(oribtal_elements, file=sys.stderr)
+
 
     #Take lots of samples in the last ~2 years of orbit
     for i, time in enumerate(tqdm(times)):
@@ -224,18 +236,18 @@ if (__name__ == "__main__"):
                 escaped = False
             except:
                 n_escaped += 1
-                print(f"Number escaped: {n_escaped}")
+                print(f"Number escaped: {n_escaped}", file=sys.stderr)
                 for j in range(sim.N):
                     p = sim.particles[j]
                     d2 = p.x*p.x + p.y*p.y + p.z*p.z
                     if d2>sim.exit_max_distance**2:
                         index=p.hash # cache index rather than remove here since our loop would go beyond end of particles array
-                print(index)
+                print(index, file=sys.stderr)
                 try: sim.remove(hash=index)
                 except: escaped = False
 
 
-                # Generate output
+        # Generate output
         for j in range(n):
             try:
                 p = sim.particles[f"{j}"]
@@ -244,8 +256,11 @@ if (__name__ == "__main__"):
                     xy[i][j] = [p.x, p.y, p.z, t_and_r[str(j)][0], t_and_r[str(j)][1]]
                 else:
                     xy[i][j] = [p.x, p.y, p.z, o.a, o.e]
-            except:
+            except Exception as e:
+                print(f"Exception: {e}")
                 xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
 
     # Save output
     np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
+    print(xy, file=sys.stderr)
+    print(k, file=sys.stderr)
