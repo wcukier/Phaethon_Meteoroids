@@ -66,9 +66,9 @@ if (__name__ == "__main__"):
     n_years = age
     if (age==2000):
             try:
-                    y0 = np.load("data/perihelion.npy")
-                    t_start = np.mean(np.load("data/t_start.npy"))
-                    orbit = np.load("data/orig_orbit.npy")
+                    y0 = np.load("data/perihelion.npy", allow_pickle=True)
+                    t_start = np.mean(np.load("data/t_start.npy", allow_pickle=True))
+                    orbit = np.load("data/orig_orbit.npy", allow_pickle=True)
             except:
                     y0, t_start, orbit = perihelion()
     else:
@@ -86,11 +86,7 @@ if (__name__ == "__main__"):
     #slice to current run
     beta = beta[n_particles*k: n_particles*(k+1)]
     mass = mass[n_particles*k: n_particles*(k+1)]
-<<<<<<< HEAD
-    vel = vel[n_particles*k: n_particles*(k+1)] * 0 #TODO what is this
-=======
     vel = vel[n_particles*k: n_particles*(k+1)] 
->>>>>>> 744eef5 (comments)
     print(vel*au, flush=True)
 
     n = n_particles
@@ -141,10 +137,6 @@ if (__name__ == "__main__"):
             y0, r, t = init_loc(int(k/100), orbit)
             t_and_r[str(i)] = [t, r]
         if ((model % 3) != 1): vel[i] = [0,0,0] # Not velocity model -- set vel to 9
-<<<<<<< HEAD
-        vel[i] = [0,0,0] # TODO remove
-=======
->>>>>>> 744eef5 (comments)
         sim.add(x = y0[0]+1e-10*np.random.rand(), y=y0[1], z=y0[2], vx=y0[3]+vel[i,0], vy = y0[4]+vel[i,1], vz = y0[5]+vel[i,2], hash = f"{i}")
     sim.move_to_com()
 

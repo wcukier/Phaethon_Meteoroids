@@ -43,14 +43,14 @@ def load(n: int, model: int, pth=None):
     """
 
 
-    orbit = np.load("../data/orig_orbit.npy")
+    orbit = np.load("../data/orig_orbit.npy", allow_pickle=True)
     if (not pth):  pth = "../output/" + ["novel", "vel", "distr"][model]
     points = []
     mass = 0
     for i in tqdm(range(n)):
-        data = np.load(f'{pth}/particles{i}.npy')
-        beta = np.load(f'{pth}/beta{i}.npy')
-        size = np.load(f'{pth}/mass{i}.npy')
+        data = np.load(f'{pth}/particles{i}.npy', allow_pickle=True)
+        beta = np.load(f'{pth}/beta{i}.npy', allow_pickle=True)
+        size = np.load(f'{pth}/mass{i}.npy', allow_pickle=True)
         size = asteroidal(beta)
         data = data.reshape(10000*10*2, 5)
         data = data[:,:3]
@@ -106,8 +106,8 @@ def load_all_data():
     masses = []
     for i in range(3):
         try:
-            points.append(np.load(f"../output/cached/points_{i}.npy"))
-            masses.append(np.load(f"../output/cached/mass_{i}.npy")[0])
+            points.append(np.load(f"../output/cached/points_{i}.npy", allow_pickle=True))
+            masses.append(np.load(f"../output/cached/mass_{i}.npy", allow_pickle=True)[0])
             print(f"Loaded ../output/cached/points_{i}.npy")
             print(f"Loaded ../output/cached/mass_{i}.npy")
         except Exception as e:
@@ -141,7 +141,7 @@ def get_phaethon_orbit():
     Returns:
         orbit_phaethon (ndarray): Position vectors of (3200) Phaethon in ECLIP_J2000 cords
     """
-    orbit = np.load("data/phaethon.npy")
+    orbit = np.load("data/phaethon.npy", allow_pickle=True)
     orbit = orbit.reshape((20000,5))[:,:3].copy()
     transform = spice.pxform("J2000", "ECLIPJ2000", 0)
     return np.dot(transform, orbit.T).T
@@ -153,7 +153,7 @@ def get_parker_orbit():
     Returns:
         orbit_parker(ndarray): Position vectors of PSP
     """
-    psp = np.load("data/psp.npy")
+    psp = np.load("data/psp.npy", allow_pickle=True)
     psp = psp[:,:3].copy()
     transform = spice.pxform("J2000", "ECLIPJ2000", 0)
     return np.dot(transform, psp.T).T
@@ -493,12 +493,12 @@ def load_elements(n:int, model:int, pth=None):
     """
 
 
-    orbit = np.load("../data/orig_orbit.npy")
+    orbit = np.load("../data/orig_orbit.npy", allow_pickle=True)
     if (not pth):  pth = "../output/" + ["novel", "vel", "distr"][model]
     elements = np.zeros((1998,100*n,8))
     for i in tqdm(range(n)):
-        data = np.load(f"{pth}/elements{i}.npy")
-        beta = np.load(f"{pth}/beta{i}.npy")
+        data = np.load(f"{pth}/elements{i}.npy", allow_pickle=True)
+        beta = np.load(f"{pth}/beta{i}.npy", allow_pickle=True)
         size = asteroidal(beta)
         temp_arr = np.zeros((1998,100,8))
         temp_arr[:,:,:5] = data
@@ -790,7 +790,7 @@ def rate_at_earth(points, KDTrees, r=0.05, n=8000, vels=None):
 
 
     spice.furnsh("data/meta.tm")
-    t_act = np.load('data/t-3200.npy')
+    t_act = np.load('data/t-3200.npy', allow_pickle=True)
 
     pos_arr = np.zeros((n,3))
     n_particles = np.zeros((len(KDTrees), n))
@@ -860,7 +860,7 @@ def rate_at_psp(points, KDTrees, masses, r=0.05, n=8000, norm=1e15):
     p_vel = 1.1e5 # The speed of (3200) Phaethon at perihelion, m/s
     spice.furnsh("data/meta.tm")
     psp = get_parker_orbit()
-    t_vel = np.load('data/t-vel.npy')
+    t_vel = np.load('data/t-vel.npy', allow_pickle=True)
     norms = norm/np.array(masses)
 
     n_particles = np.zeros((len(KDTrees), n))
