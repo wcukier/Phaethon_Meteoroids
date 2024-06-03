@@ -3,7 +3,12 @@ Installation and Setup
 
 Installation
 ------------
-The code can be downloaded from the Github page: https://github.com/wcukier/Phaethon_Meteoroids
+The code can be downloaded from the Github page: https://github.com/wcukier/Phaethon_Meteoroids or downloaded with git
+
+.. code-block:: bash
+
+    git clone https://github.com/wcukier/Phaethon_Meteoroids
+
 
 Dependencies
 ------------
