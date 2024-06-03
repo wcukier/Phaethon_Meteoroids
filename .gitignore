@@ -24,3 +24,4 @@ Run_Model.ipynb
 *.err
 *.out
 logs/*
+data/orig_orbit.npy
