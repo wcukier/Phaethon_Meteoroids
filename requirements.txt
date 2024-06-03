@@ -6,3 +6,4 @@ reboundx==4.0.0
 scipy==1.9.3
 spiceypy==5.1.2
 tqdm==4.64.1
+sphinx-rtd-theme==2.0.0
