@@ -19,3 +19,6 @@ cd geminids/data/SPICE
 wget https://www.dropbox.com/scl/fi/ayk4384rjqr9loa7g6vcu/small_kernels.zip\?rlkey=iei7x40aelfo5cuv2cqm0xygx\&dl=1
 unzip small_kernels.zip\?rlkey=iei7x40aelfo5cuv2cqm0xygx\&dl=1
 rm small_kernels.zip\?rlkey=iei7x40aelfo5cuv2cqm0xygx\&dl=1
+cd ../../../data
+wget https://www.dropbox.com/scl/fi/orzkj57f4n16hxraalmld/orig_orbit.npy\?rlkey=yxfyhxyvu7cn55e27g85oebgz\&dl=1
+mv orig_orbit.npy\?rlkey=yxfyhxyvu7cn55e27g85oebgz\&dl=1 orig_orbit.npy
