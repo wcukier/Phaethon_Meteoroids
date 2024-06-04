@@ -1,8 +1,8 @@
-matplotlib==3.6.1
-numpy==1.23.3
-pandas==1.5.1
-rebound==3.21.0
+matplotlib==3.3.4
+numpy==1.20.1
+pandas==1.2.4
+rebound==3.18.0
 reboundx==3.4.1
-scipy==1.9.3
-spiceypy==5.1.2
-tqdm==4.64.1
+scipy==1.6.2
+spiceypy==4.0.2
+tqdm==4.59.0
