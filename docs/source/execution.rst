@@ -17,7 +17,7 @@ The code is run by calling :code:`main.py` with up to 3-4 command line arguments
 
 An example execution is below:
 
-.. code_block:: bash
+.. code-block:: bash
 
     python main.py 0 1 100 2000
 
