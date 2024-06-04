@@ -37,7 +37,7 @@ if (__name__ == "__main__"):
     n_escaped = 0
     k = int(sys.argv[1])
     model = int(sys.argv[2])
-    dr = os.getcwd()
+    # dr = os.getcwd()
     if   (model == 0): subdir = "novel"
     elif (model == 1): subdir = "vel"
     elif (model == 2): subdir = "distr" #aka cometary model
@@ -165,8 +165,8 @@ if (__name__ == "__main__"):
 
 
     # Save particle parameters
-    np.save(f"{dr}/output/{subdir}/beta{k}.npy", beta)
-    np.save(f"{dr}/output/{subdir}/mass{k}.npy", mass)
+    np.save(f"output/{subdir}/beta{k}.npy", beta)
+    np.save(f"output/{subdir}/mass{k}.npy", mass)
 
     # Simulate for age-2 years
     for i in tqdm(range(int((n_years-window)))):
@@ -211,8 +211,8 @@ if (__name__ == "__main__"):
 
 
     # Save particle states
-    np.save(f"{dr}/output/{subdir}/elements{k}.npy", oribtal_elements)
-    sim.save(f"{dr}/output/{subdir}/sim{k}.bin")
+    np.save(f"output/{subdir}/elements{k}.npy", oribtal_elements)
+    sim.save(f"output/{subdir}/sim{k}.bin")
     print(f"Elements should be saved for run {k}", file=sys.stderr)
     print(oribtal_elements, file=sys.stderr)
 
@@ -253,6 +253,6 @@ if (__name__ == "__main__"):
                 xy[i][j] = [np.nan, np.nan, np.nan, np.nan, np.nan]
 
     # Save output
-    np.save(f"{dr}/output/{subdir}/particles{k}.npy", xy)
+    np.save(f"output/{subdir}/particles{k}.npy", xy)
     print(xy, file=sys.stderr)
     print(k, file=sys.stderr)
