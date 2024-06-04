@@ -1,4 +1,10 @@
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11479174.svg)](https://doi.org/10.5281/zenodo.11479174)
+
+
+
+
 ## Documentation
 Documentation is available at [phaethon-meteoroids.readthedocs.io](https://phaethon-meteoroids.readthedocs.io/en/latest/)
 
