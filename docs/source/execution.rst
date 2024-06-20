@@ -23,7 +23,7 @@ An example execution is below:
 
 This will run the code using the Violent creation model, using the first 100 particles, with a stream age of 2000 years.
 
-Note: The way the code works, all 10000 particles for the base and violent creation model and all 100000 particles for the cometary creation model must be simulated for proper read_data
+Note: The way the code works, all 10000 particles for the base and violent creation model and all 100000 particles for the cometary creation model must be simulated for valid data analysis
 
 
 If you have access to a HPC cluster using :code:`slurm`, example :code:`.slurm` files have been provided to automate running
