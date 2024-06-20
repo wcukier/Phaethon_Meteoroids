@@ -59,6 +59,6 @@ To create the output directories run the file createDirs.sh
 
 Data Availability
 -----------------
-The code output as used in Cukier and Szalay (2023) is available for download at doi.org/10.5281/zenodo.11474474 or https://zenodo.org/uploads/11474474.  Placeing these files in the  :code:`output/cached` directory will allow the data analysis code provided in this repo to read those data.  
+The code output as used in Cukier and Szalay (2023) is available for download at https://doi.org/10.5281/zenodo.11474474 or https://zenodo.org/uploads/11474474.  Placeing these files in the  :code:`output/cached` directory will allow the data analysis code provided in this repo to read those data.  
 
 
