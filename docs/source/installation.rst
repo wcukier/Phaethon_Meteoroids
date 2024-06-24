@@ -61,4 +61,6 @@ Data Availability
 -----------------
 The code output as used in Cukier and Szalay (2023) is available for download at https://zenodo.org/doi/10.5281/zenodo.11474471 or https://doi.org/10.5281/zenodo.11474471.  Placeing these files in the  :code:`output/cached` directory will allow the data analysis code provided in this repo to read those data.  
 
+**Note that if there are fines in output/cached the code will ignore the files in output so if you do your own runs be sure to delete the files in :code:`output/cached` before performing data analysis**
+
 
